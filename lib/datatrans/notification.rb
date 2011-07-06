@@ -1,31 +1,72 @@
-class Datatrans::Notification::Base
-  attr_reader :params
+module Datatrans::Notification
+  class InvalidSignatureError < StandardError; end
   
-  def initialize(params)
-    raise 'Please define Datatrans.sign_key!' unless Datatrans.sign_key.present?
+  class Base
+    attr_reader :params
+  
+    def initialize(params)
+      raise 'Please define Datatrans.sign_key!' unless Datatrans.sign_key.present?
 
-    params = params.to_hash
-    params.symbolize_keys!
-    params.reverse_merge!({ :reqtype => 'NOA', :useAlias => 'Yes' })
-    @params = params
+      params = params.to_hash
+      params.symbolize_keys!
+      params.reverse_merge!({ :reqtype => 'NOA', :useAlias => 'Yes', :hiddenMode => 'Yes' })
+      @params = params
+    end
+  
+    def reference_number
+      params[:refno]
+    end
+
+    protected
+  
+    def sign(*fields)
+      key = Datatrans.sign_key.split(/([a-f0-9][a-f0-9])/).reject(&:empty?)
+      key = key.pack("H*" * key.size)
+      OpenSSL::HMAC.hexdigest(OpenSSL::Digest::MD5.new, key, fields.join)
+    end
   end
   
-  def reference_number
-    params[:refno]
+  class Request < Base
+    def signature
+      sign(Datatrans.merchant_id, params[:amount], params[:currency], params[:refno])
+    end
   end
 
-  protected
-  
-  def sign(*fields)
-    key = DATATRANS_SIGN_KEY.split(/([a-f0-9][a-f0-9])/).reject(&:empty?)
-    key = key.pack("H*" * key.size)
-    OpenSSL::HMAC.hexdigest(OpenSSL::Digest::MD5.new, key, fields.join)
+  class Response < Base
+    def valid_signature?
+      sign(Datatrans.merchant_id, params[:amount], params[:currency], params[:uppTransactionId]) == params[:sign2]
+    end
+
+    def transaction_id
+      params[:uppTransactionId]
+    end
+
+    def creditcard_alias
+      params[:aliasCC]
+    end
+    
+    def payment_method
+      params[:pmethod]
+    end
+    
+    def success?
+      params[:status] == 'success'
+    end
+
+    def cancel?
+      params[:status] == 'cancel'
+    end
+
+    def error?
+      params[:status] == 'error'
+    end
   end
-  
+
   module ViewHelper
     def datatrans_notification_request_hidden_fields(request)
       [
         hidden_field_tag(:merchantId, Datatrans.merchant_id),
+        hidden_field_tag(:hiddenMode, request.params[:hiddenMode]),
         hidden_field_tag(:reqtype, request.params[:reqtype]),
         hidden_field_tag(:amount, request.params[:amount]),
         hidden_field_tag(:currency, request.params[:currency]),
@@ -36,42 +77,5 @@ class Datatrans::Notification::Base
         hidden_field_tag(:uppCustomerEmail, request.params[:uppCustomerEmail])
       ].join.html_safe
     end
-  end
-end
-
-class Datatrans::Notification::Request < Datatrans::Notification::Base
-  def signature
-    sign(Datatrans.merchant_id, params[:amount], params[:currency], params[:refno])
-  end
-end
-
-class Datatrans::Notification::Response < Datatrans::Notification::Base
-  def initialize(params)
-    super(params)
-    raise ArgumentError.new('Invalid signature') unless valid_signature?
-  end
-  
-  def valid_signature?
-    sign(Datatrans.merchant_id, params[:amount], params[:currency], params[:uppTransactionId]) == params[:sign2]
-  end
-  
-  def transaction_id
-    params[:uppTransactionId]
-  end
-  
-  def creditcard_alias
-    params[:aliasCC]
-  end
-  
-  def success?
-    params[:status] == 'success'
-  end
-  
-  def cancel?
-    params[:status] == 'cancel'
-  end
-  
-  def error?
-    params[:status] == 'error'
   end
 end
