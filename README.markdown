@@ -26,3 +26,15 @@ View
 ----
 
 TODO
+
+Credits
+=======
+
+Datatrans is maintained by Simplificator GmbH (http://simplificator.com).
+
+The initial development was sponsered by Evita AG and Limmex AG.
+
+License
+=======
+
+Datatrans is released under the MIT license.
