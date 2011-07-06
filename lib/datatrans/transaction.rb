@@ -1,3 +1,5 @@
+require 'httparty'
+
 class Datatrans::Transaction
   include HTTParty
   
@@ -8,12 +10,21 @@ class Datatrans::Transaction
   end
   
   def authorize
-    # TODO
+    @response = self.class.post(Datatrans.xml_authorize_url, 
+      :headers => { 'Content-Type' => 'text/xml' },
+      :body => build_authorize_request.to_s).parsed_response
   end
 
   def capture
-    @response = self.class.post(Datatrans.xml_url, :headers => { 'Content-Type' => 'text/xml' },
+    @response = self.class.post(Datatrans.xml_settlement_url, 
+      :headers => { 'Content-Type' => 'text/xml' },
       :body => build_capture_request.to_s).parsed_response
+  end
+  
+  def void
+    @response = self.class.post(Datatrans.xml_settlement_url, 
+      :headers => { 'Content-Type' => 'text/xml' },
+      :body => build_void_request.to_s).parsed_response
   end
   
   def success?
@@ -40,12 +51,29 @@ class Datatrans::Transaction
     end
     xml.target!
   end
-  
+
+  def build_authorize_request
+    build_xml_request(:authorization) do |xml|
+      xml.amount params[:amount]
+      xml.currency params[:currency]
+      xml.aliasCC params[:aliasCC]
+    end
+  end
+    
   def build_capture_request
     build_xml_request(:payment) do |xml|
       xml.amount params[:amount]
       xml.currency params[:currency]
       xml.uppTransactionId params[:transaction_id]
+    end
+  end
+  
+  def build_void_request
+    build_xml_request(:payment) do |xml|
+      xml.amount params[:amount]
+      xml.currency params[:currency]
+      xml.uppTransactionId params[:transaction_id]
+      xml.reqtype 'DOA'
     end
   end
 end
