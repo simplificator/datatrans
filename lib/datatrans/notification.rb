@@ -23,7 +23,7 @@ class Datatrans::Notification::Base
   end
   
   module ViewHelper
-    def datatrans_notification_hidden_fields(request)
+    def datatrans_notification_request_hidden_fields(request)
       [
         hidden_field_tag(:merchantId, Datatrans.merchant_id),
         hidden_field_tag(:reqtype, request.params[:reqtype]),
