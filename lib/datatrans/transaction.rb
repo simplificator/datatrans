@@ -60,6 +60,9 @@ class Datatrans::Transaction
       xml.amount params[:amount]
       xml.currency params[:currency]
       xml.aliasCC params[:aliasCC]
+      xml.expm params[:expm]
+      xml.expy params[:expy]
+      xml.sign sign(Datatrans.merchant_id, params[:amount], params[:currency], params[:refno])
     end
   end
     
