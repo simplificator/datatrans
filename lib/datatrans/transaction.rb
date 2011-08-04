@@ -35,7 +35,10 @@ class Datatrans::Transaction
     @response['paymentService']['body']['transaction']['error'].present? rescue false
   end
   
+  
   private
+  
+  include Datatrans::Common
   
   def build_xml_request(service)
     xml = Builder::XmlMarkup.new

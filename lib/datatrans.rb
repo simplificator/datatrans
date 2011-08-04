@@ -41,6 +41,7 @@ module Datatrans
 end
 
 require 'datatrans/version'
+require 'datatrans/common'
 require 'datatrans/notification'
 require 'datatrans/transaction'
 

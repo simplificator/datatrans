@@ -17,13 +17,10 @@ module Datatrans::Notification
       params[:refno]
     end
 
+
     protected
   
-    def sign(*fields)
-      key = Datatrans.sign_key.split(/([a-f0-9][a-f0-9])/).reject(&:empty?)
-      key = key.pack("H*" * key.size)
-      OpenSSL::HMAC.hexdigest(OpenSSL::Digest::MD5.new, key, fields.join)
-    end
+    include Datatrans::Common
   end
   
   class Request < Base
