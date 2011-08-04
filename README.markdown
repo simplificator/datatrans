@@ -63,7 +63,7 @@ In this example we use just ECA (Mastercard) as paymentmethod. Feel free to
 provide an appropriate select field to offer more payment methods. This is the
 form you will show in your "new" method.
 
-    = form_tag, :url => Datatrans.web_authorize_url do
+    = form_tag Datatrans.web_authorize_url do
     
       = text_field_tag :paymentmethod, 'ECA'
       = text_field_tag :cardno
@@ -98,7 +98,7 @@ To capture an authorized transaction you use the following code:
 To authorize a new transaction (you need the alias CC of a previous transaction) use that code:
   
     begin
-      Datatrans::Transaction.new(
+      transaction = Datatrans::Transaction.new(
         :refno => "your order no or sth else",
         :amount => 1000,
         :currency => 'CHF',,
@@ -106,6 +106,9 @@ To authorize a new transaction (you need the alias CC of a previous transaction)
         :expm => 12,
         :expy => 15
       ).authorize
+      
+      # now save the transaction.transaction_id
+      # and e.g. the transaction.masked_cc
     rescue
       # do something about it...
     end
