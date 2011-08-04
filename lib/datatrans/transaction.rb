@@ -13,26 +13,29 @@ class Datatrans::Transaction
     @response = self.class.post(Datatrans.xml_authorize_url, 
       :headers => { 'Content-Type' => 'text/xml' },
       :body => build_authorize_request.to_s).parsed_response
+    self
   end
 
   def capture
     @response = self.class.post(Datatrans.xml_settlement_url, 
       :headers => { 'Content-Type' => 'text/xml' },
       :body => build_capture_request.to_s).parsed_response
+    self
   end
   
   def void
     @response = self.class.post(Datatrans.xml_settlement_url, 
       :headers => { 'Content-Type' => 'text/xml' },
       :body => build_void_request.to_s).parsed_response
+    self
   end
   
-  def success?
-    @response['paymentService']['body']['transaction']['response'].present? rescue false
+  def transaction_id
+    @response['authorizationService']['body']['transaction']['response']['upptransactionid'] rescue nil
   end
-
-  def error?
-    @response['paymentService']['body']['transaction']['error'].present? rescue false
+  
+  def masked_cc
+    @response['authorizationService']['body']['transaction']['response']['maskedcc'] rescue nil
   end
   
   
