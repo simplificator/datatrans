@@ -31,11 +31,11 @@ class Datatrans::Transaction
   end
   
   def transaction_id
-    @response['authorizationService']['body']['transaction']['response']['upptransactionid'] rescue nil
+    @response['authorizationService']['body']['transaction']['response']['uppTransactionId'] rescue nil
   end
   
   def masked_cc
-    @response['authorizationService']['body']['transaction']['response']['maskedcc'] rescue nil
+    @response['authorizationService']['body']['transaction']['response']['maskedCC'] rescue nil
   end
   
   
