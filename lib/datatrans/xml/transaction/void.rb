@@ -43,7 +43,7 @@ class Datatrans::XML::Transaction
     end
     
     def reference_number
-      params_root_node['refno']
+      params_root_node['refno'] rescue nil 
     end
     
     def error_code

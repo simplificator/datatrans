@@ -13,7 +13,7 @@ describe Datatrans::Common do
       currency = 'CHF'
       reference_number = 'ABCEDF'
       
-      @request.sign(Datatrans.merchant_id, amount, currency, reference_number).should == '0c460bc8812097d5b3bf1c510529f508'
+      @request.sign(Datatrans.merchant_id, amount, currency, reference_number).should == '4e7d4d5bbde548c586f3b7f109635ffc'
     end
   end
   

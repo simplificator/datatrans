@@ -7,62 +7,63 @@ class Datatrans::WEB::Transaction
     end
     
     def successful?
-      puts params.inspect
-      response_code == '01' && response_message == 'Authorized'
+      raise InvalidSignatureError unless valid_signature?
+      response_code == '01' && response_message == 'Authorized' && !errors_occurred?
     end
     
     def valid_signature?
+      return true if errors_occurred? # no sign2 sent on error
       sign(Datatrans.merchant_id, params[:amount], params[:currency], params[:uppTransactionId]) == params[:sign2]
     end
     
     def response_code
-      params_root_node['response']['responseCode'] rescue nil
+      params[:responseCode] rescue nil
     end
     
     def response_message
-      params_root_node['response']['responseMessage'] rescue nil
+      params[:responseMessage] rescue nil
     end
     
     def transaction_id
-      params_root_node['response']['uppTransactionId'] rescue nil 
+      params[:uppTransactionId] rescue nil 
     end
     
     def reference_number
-      params_root_node['refno']
+      params[:refno] rescue nil 
     end
     
     def authorization_code
-      params_root_node['response']['257128012'] rescue nil
+      params[:authorizationCode] rescue nil
     end
 
     def masked_cc
-      params_root_node['response']['maskedCC'] rescue nil
+      params[:maskedCC] rescue nil
     end
     
     def creditcard_alias
-      params_root_node['request']['aliasCC'] rescue nil
+      params[:aliasCC] rescue nil
     end
     
     def error_code
-      params_root_node['error']['errorCode'] rescue nil 
+      params[:errorCode] rescue nil
     end
     
     def error_message
-      params_root_node['error']['errorMessage'] rescue nil
+      params[:errorMessage] rescue nil
     end
     
     def error_detail
-      params_root_node['error']['errorDetail'] rescue nil
+      params[:errorDetail] rescue nil
     end
     
     
     private
     
-    include Datatrans::Common
-    
-    def params_root_node
-      params['authorizationService']['body']['transaction']
+    def errors_occurred?
+      error_code || error_message || error_detail
     end
+    
+    include Datatrans::Common
   end
   
   class InvalidSignatureError < StandardError; end

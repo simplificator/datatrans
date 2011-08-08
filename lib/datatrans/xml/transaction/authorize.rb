@@ -45,11 +45,11 @@ class Datatrans::XML::Transaction
     end
     
     def reference_number
-      params_root_node['refno']
+      params_root_node['refno'] rescue nil 
     end
     
     def authorization_code
-      params_root_node['response']['257128012'] rescue nil
+      params_root_node['response']['authorizationCode'] rescue nil
     end
 
     def masked_cc

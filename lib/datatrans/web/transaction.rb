@@ -24,6 +24,14 @@ module Datatrans::WEB
       @response = AuthorizeResponse.new(params)
       @response.successful?
     end
+    
+    def method_missing(method, *args, &block)
+      if response.respond_to? method.to_sym
+        response.send(method)
+      else
+        super
+      end
+    end
   end
   
   module ViewHelper

@@ -1,15 +1,69 @@
+#encoding: utf-8
+
 require 'spec_helper'
 
 describe Datatrans::WEB::Transaction do
   before do
+    @successful_response = {
+      :status => "success", 
+      :returnCustomerCountry => "CHE", 
+      :sign => "95f3111123e628eab6469c636e0d3f06", 
+      :aliasCC => "70323122544311173", 
+      :maskedCC => "520000xxxxxx0007", 
+      :responseMessage => "Authorized", 
+      :useAlias => "Yes", 
+      :expm => "12", 
+      :responseCode => "01", 
+      :sign2 => "a9571428be4d9d37b88988656984bfbf", 
+      :testOnly => "yes", 
+      :currency => "CHF", 
+      :amount => "1000", 
+      :hiddenMode => "yes", 
+      :expy => "15", 
+      :merchantId => "1100000000", 
+      :authorizationCode => "521029462", 
+      :uppTransactionId => "110808173520119430", 
+      :refno => "1", 
+      :uppMsgType => "web", 
+      :uppCustomerName => "", 
+      :pmethod => "ECA", 
+      :reqtype => "NOA", 
+      :uppCustomerEmail => "customer@email.com", 
+      :acqAuthorizationCode => "173520"
+    }
+    
+    @failed_response = {
+      :status => "error", 
+      :returnCustomerCountry => "CHE", 
+      :sign => "95f3123246e628eab6469c636e0d3f06", 
+      :aliasCC => "70323122544311173", 
+      :maskedCC => "520000xxxxxx0007", 
+      :errorMessage => "declined", 
+      :useAlias => "Yes", 
+      :expm => "12", 
+      :errorCode => "1403", 
+      :testOnly => "yes", 
+      :currency => "CHF", 
+      :amount => "1000", 
+      :hiddenMode => "yes", 
+      :expy => "14", 
+      :merchantId => "1100000000", 
+      :errorDetail => "Declined", 
+      :uppTransactionId => "110808173951050102", 
+      :refno => "1", 
+      :uppMsgType => "web", 
+      :uppCustomerName => "", 
+      :pmethod => "ECA", 
+      :reqtype => "NOA", 
+      :uppCustomerEmail => "customer@email.com"
+    }
+    
     @valid_params = {
       :refno => 'ABCDEF',
       :amount => 1000,
       :currency => 'CHF',
-      :aliasCC => '3784982984234',
-      :expm => 12,
-      :expy => 15,
       :uppCustomerEmail => 'customer@email.com'
+      # also params from view helper needed
     }
   end
   
@@ -25,10 +79,50 @@ describe Datatrans::WEB::Transaction do
   end
   
   context "successful response" do
+    before do
+      Datatrans::WEB::Transaction::AuthorizeResponse.any_instance.stub(:params).and_return(@successful_response)
+    end
     
+    context "process" do
+      it "handles a valid datatrans authorize response" do
+        @transaction = Datatrans::WEB::Transaction.new(@valid_params)
+        @transaction.authorize.should be_true
+      end
+    end
+  end
+  
+  context "hacked response" do
+    before do
+      fake_response = @successful_response
+      fake_response[:sign2] = 'invalid'
+      Datatrans::WEB::Transaction::AuthorizeResponse.any_instance.stub(:params).and_return(fake_response)
+      @transaction = Datatrans::WEB::Transaction.new(@valid_params)
+    end
+    
+    it "raises an exception if sign2 is invalid" do
+      expect {
+        @transaction.authorize
+      }.to raise_error(Datatrans::WEB::Transaction::InvalidSignatureError)
+    end
   end
   
   context "failed response" do
-    
+    before do
+      Datatrans::WEB::Transaction::AuthorizeResponse.any_instance.stub(:params).and_return(@failed_response)
+      @transaction = Datatrans::WEB::Transaction.new(@valid_params)
+    end
+  
+    context "process" do
+      it "handles a failed datatrans authorize response" do
+        @transaction.authorize.should be_false
+      end
+  
+      it "returns error details" do
+        @transaction.authorize
+        @transaction.error_code.length.should > 0
+        @transaction.error_message.length.should > 0
+        @transaction.error_detail.length.should > 0
+      end
+    end
   end
 end
