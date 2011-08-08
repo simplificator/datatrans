@@ -1,3 +1,5 @@
+require 'openssl'
+
 module Datatrans::Common
   def sign(*fields)
     key = Datatrans.sign_key.split(/([a-f0-9][a-f0-9])/).reject(&:empty?)

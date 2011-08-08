@@ -1,3 +1,6 @@
+require 'active_support/core_ext/module'
+require 'action_view'
+
 module Datatrans
   BASE_URL = 'https://payment.datatrans.biz'
   WEB_AUTHORIZE_URL = "#{BASE_URL}/upp/jsp/upStart.jsp"
@@ -42,7 +45,7 @@ end
 
 require 'datatrans/version'
 require 'datatrans/common'
-require 'datatrans/notification'
-require 'datatrans/transaction'
+require 'datatrans/xml/transaction'
+require 'datatrans/web/transaction'
 
-ActionView::Base.send :include, Datatrans::Notification::ViewHelper if defined? ActionView
+ActionView::Base.send :include, Datatrans::WEB::ViewHelper
