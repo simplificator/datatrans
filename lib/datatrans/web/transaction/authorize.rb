@@ -35,6 +35,10 @@ class Datatrans::Web::Transaction
     def authorization_code
       params[:authorizationCode] rescue nil
     end
+    
+    def payment_method
+      params[:pmethod] rescue nil
+    end
 
     def masked_cc
       params[:maskedCC] rescue nil
