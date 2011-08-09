@@ -91,7 +91,7 @@ describe Datatrans::Web::Transaction do
     end
   end
   
-  context "hacked response" do
+  context "compromised response" do
     before do
       fake_response = @successful_response
       fake_response[:sign2] = 'invalid'
@@ -102,7 +102,7 @@ describe Datatrans::Web::Transaction do
     it "raises an exception if sign2 is invalid" do
       expect {
         @transaction.authorize
-      }.to raise_error(Datatrans::Web::Transaction::InvalidSignatureError)
+      }.to raise_error(Datatrans::InvalidSignatureError)
     end
   end
   

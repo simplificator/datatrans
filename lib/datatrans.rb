@@ -41,6 +41,8 @@ module Datatrans
       raise "Unknown environment '#{environment}'. Available: :development, :production."
     end
   end
+  
+  class InvalidSignatureError < StandardError; end
 end
 
 require 'datatrans/version'
