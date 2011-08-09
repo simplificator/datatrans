@@ -40,6 +40,14 @@ class Datatrans::Web::Transaction
       params[:maskedCC] rescue nil
     end
     
+    def exp_year
+      params[:expy] rescue nil
+    end
+    
+    def exp_month
+      params[:expm] rescue nil
+    end
+    
     def creditcard_alias
       params[:aliasCC] rescue nil
     end
