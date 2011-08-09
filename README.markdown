@@ -33,10 +33,6 @@ You need to pass at least `amount`, `currency` and `refno` (order number).
     
 In your View your show the credit card form with a convenient helper:
 
-In this example we use just ECA (Mastercard) as paymentmethod. Feel free to
-provide an appropriate select field to offer more payment methods. This is the
-form you will show in your "new" method.
-
     = form_tag Datatrans.web_authorize_url do
     
       = text_field_tag :paymentmethod, 'ECA'
@@ -119,14 +115,10 @@ To capture an authorized transaction you use the following code:
       :transaction_id => 19834324987349723948729834
     )
     
-    begin
-      if transaction.capture
-        # ok, the money is yours...
-      else
-        # transaction.error_code, transaction.error_message, transaction.error_detail
-      end
-    rescue Datatrans::InvalidSignatureError => exception
-      # the signature was wrong, the request may have been compromised...
+    if transaction.capture
+      # ok, the money is yours...
+    else
+      # transaction.error_code, transaction.error_message, transaction.error_detail
     end
     
 
