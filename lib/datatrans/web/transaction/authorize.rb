@@ -1,4 +1,4 @@
-class Datatrans::WEB::Transaction
+class Datatrans::Web::Transaction
   class AuthorizeResponse
     attr_accessor :params
     

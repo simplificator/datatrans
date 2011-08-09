@@ -48,4 +48,4 @@ require 'datatrans/common'
 require 'datatrans/xml/transaction'
 require 'datatrans/web/transaction'
 
-ActionView::Base.send :include, Datatrans::WEB::ViewHelper if defined? ActionView
+ActionView::Base.send :include, Datatrans::Web::ViewHelper if defined? ActionView

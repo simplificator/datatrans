@@ -1,6 +1,6 @@
 require 'active_support/core_ext/hash'
 
-module Datatrans::WEB
+module Datatrans::Web
   class Transaction
     include Datatrans::Common
     

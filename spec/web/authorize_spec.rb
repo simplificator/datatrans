@@ -2,7 +2,7 @@
 
 require 'spec_helper'
 
-describe Datatrans::WEB::Transaction do
+describe Datatrans::Web::Transaction do
   before do
     @successful_response = {
       :status => "success", 
@@ -69,7 +69,7 @@ describe Datatrans::WEB::Transaction do
   
   context "rails form helper" do
     before do
-      @transaction = Datatrans::WEB::Transaction.new(@valid_params)
+      @transaction = Datatrans::Web::Transaction.new(@valid_params)
       @view = ActionView::Base.new
     end
     
@@ -80,12 +80,12 @@ describe Datatrans::WEB::Transaction do
   
   context "successful response" do
     before do
-      Datatrans::WEB::Transaction::AuthorizeResponse.any_instance.stub(:params).and_return(@successful_response)
+      Datatrans::Web::Transaction::AuthorizeResponse.any_instance.stub(:params).and_return(@successful_response)
     end
     
     context "process" do
       it "handles a valid datatrans authorize response" do
-        @transaction = Datatrans::WEB::Transaction.new(@valid_params)
+        @transaction = Datatrans::Web::Transaction.new(@valid_params)
         @transaction.authorize.should be_true
       end
     end
@@ -95,21 +95,21 @@ describe Datatrans::WEB::Transaction do
     before do
       fake_response = @successful_response
       fake_response[:sign2] = 'invalid'
-      Datatrans::WEB::Transaction::AuthorizeResponse.any_instance.stub(:params).and_return(fake_response)
-      @transaction = Datatrans::WEB::Transaction.new(@valid_params)
+      Datatrans::Web::Transaction::AuthorizeResponse.any_instance.stub(:params).and_return(fake_response)
+      @transaction = Datatrans::Web::Transaction.new(@valid_params)
     end
     
     it "raises an exception if sign2 is invalid" do
       expect {
         @transaction.authorize
-      }.to raise_error(Datatrans::WEB::Transaction::InvalidSignatureError)
+      }.to raise_error(Datatrans::Web::Transaction::InvalidSignatureError)
     end
   end
   
   context "failed response" do
     before do
-      Datatrans::WEB::Transaction::AuthorizeResponse.any_instance.stub(:params).and_return(@failed_response)
-      @transaction = Datatrans::WEB::Transaction.new(@valid_params)
+      Datatrans::Web::Transaction::AuthorizeResponse.any_instance.stub(:params).and_return(@failed_response)
+      @transaction = Datatrans::Web::Transaction.new(@valid_params)
     end
   
     context "process" do
