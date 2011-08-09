@@ -3,61 +3,35 @@ Datatrans
 
 Ruby adapter for the Datatrans payment gateway (http://www.datatrans.ch).
 
-Usage
-=====
-
 Configuration
 -------------
 
+Set your datatrans credentials in your environment.
+
     Datatrans.configure do |config|
       config.merchant_id = '1234567'
-      config.sign_key = '...'
+      config.sign_key = 'ab739fd5b7c2a1...'
       config.environment = :production
     end
 
 Possible values for the environment: `:production`, `:development`
 
-Controller
-----------
+Web Authorization
+=================
 
-If you are restful the following code could be your "new" method.
+If you want to process a credit card the first time a web authorization is
+necessary. Add the following code to a controller action that shows the form.
+You need to pass at least `amount`, `currency` and `refno` (order number).
 
-    @datatrans_request = Datatrans::Notification::Request.new({
-      :amount => 1000,
+    @transaction = Datatrans::Web::Transaction.new({
+      :amount => 1000, # in cents!
       :currency => 'CHF',
-      :refno => "your order no or sth else",
-      :uppCustomerEmail => current_account.email,
+      :refno => 'ABCDEF',
+      :uppCustomerEmail => 'customer@email.com'
       # feel free to add more upp infos here ...
-      :reqtype => 'NOA', # just authorize, we capture later, otherwise use CAA
-      :hiddenMode => 'yes' # datatrans should not show any dialogs
     })
-
-After you submit the request to Datatrans they redirect back to your application.
-Just pass your application's success\_url, cancel\_url and error\_url (see View section).
-This code could be your "create" method.
-
-    begin
-      datatrans_response = Datatrans::Notification::Response.new(params)
-      
-      if datatrans_response.success? && datatrans_response.valid_signature?
-        # transaction was successfully carried out...
-        # datatrans_response.reference_number
-        # datatrans_response.transaction_id
-        # datatrans_response.creditcard_alias
-        
-      elsif datatrans_response.cancel?
-        # transaction was cancelled...
-      
-      elsif datatrans_response.error?
-        # an error occured...
-      
-      end
-    rescue Datatrans::Notification::InvalidSignatureError => exception
-      # invalid datatrans notification, signature does not match...
-    end
-  
-View
-----
+    
+In your View your show the credit card form with a convenient helper:
 
 In this example we use just ECA (Mastercard) as paymentmethod. Feel free to
 provide an appropriate select field to offer more payment methods. This is the
@@ -75,45 +49,128 @@ form you will show in your "new" method.
       = hidden_field_tag :cancelUrl, <your_application_return_url>
       = hidden_field_tag :errorUrl, <your_application_return_url>
     
-      = datatrans_notification_request_hidden_fields(@datatrans_request)
+      = datatrans_notification_request_hidden_fields(@transaction)
     
       = submit_tag "send"
+      
+In this example we use just ECA (Mastercard) as paymentmethod. Feel free to
+provide an appropriate select field to offer more payment methods. Don't forget
+to add `successUrl`, `cancelUrl` and `errorUrl`. We recommend to set them all
+to the same value.
+ 
+After you submit the request to Datatrans they redirect back to your application.
+Now you can process the transaction like this:
 
-Model
------
+    begin
+      transaction = Datatrans::Web::Transaction.new(params)
+      
+      if transaction.authorize
+        # transaction was successful, access the following attributes
+        # transaction.transaction_id
+        # transaction.creditcard_alias
+        # transaction.masked_cc
+        # transaction.authorization_code
+        # ...
+        
+      else
+        # transaction was not successful, accces the error details
+        # transaction.error_code, transaction.error_message, transaction.error_detail
+        
+      end 
+    rescue Datatrans::InvalidSignatureError => exception
+      # the signature was wrong, the request may have been compromised...
+    end
+  
+XML Transactions
+================
+
+If you have already a credit card alias or an authorized transaction you can
+use the convenient XML methods to process payments.
+
+Authorize
+---------
+
+    transaction = Datatrans::XML::Transaction.new(
+      :refno => 'ABCDEF',
+      :amount => 1000, # in cents!
+      :currency => 'CHF',
+      :aliasCC => '8383843729284848348',
+      :expm => 12,
+      :expy => 15
+    )
+    
+    if transaction.authorize
+      # ok, the transaction is authorized...
+      # access same values as in the web authorization (e.g. transaction.transaction_id)
+    else
+      # transaction.error_code, transaction.error_message, transaction.error_detail
+    end
+
+
+Capture
+-------
 
 To capture an authorized transaction you use the following code:
 
+    transaction = Datatrans::XML::Transaction.new(
+      :refno => 'ABCDEF',
+      :amount => 1000, # in cents!
+      :currency => 'CHF',
+      :transaction_id => 19834324987349723948729834
+    )
+    
     begin
-      Datatrans::Transaction.new(
-        :refno => "your order no or sth else",
-        :amount => 1000,
-        :currency => 'CHF',
-        :transaction_id => "your transaction id"
-      ).capture
-    rescue
-      # do something about it...
+      if transaction.capture
+        # ok, the money is yours...
+      else
+        # transaction.error_code, transaction.error_message, transaction.error_detail
+      end
+    rescue Datatrans::InvalidSignatureError => exception
+      # the signature was wrong, the request may have been compromised...
     end
-  
-To authorize a new transaction (you need the alias CC of a previous transaction) use that code:
-  
-    begin
-      transaction = Datatrans::Transaction.new(
-        :refno => "your order no or sth else",
-        :amount => 1000,
-        :currency => 'CHF',,
-        :aliasCC => "alias CC no",
-        :expm => 12,
-        :expy => 15
-      ).authorize
-      
-      # now save the transaction.transaction_id
-      # and e.g. the transaction.masked_cc
-    rescue
-      # do something about it...
+    
+
+Void
+----
+
+To make an authorized transaction invalid use void.
+
+    transaction = Datatrans::XML::Transaction.new(
+      :refno => 'ABCDEF',
+      :amount => 1000, # in cents!
+      :currency => 'CHF',
+      :transaction_id => 19834324987349723948729834
+    )
+    
+    if transaction.void
+      # ok, the transaction is not longer valid...
+    else
+      # transaction.error_code, transaction.error_message, transaction.error_detail
     end
+
+
+Todo
+====
+
+* allow signing of xml transactions
+* allow signing with different keys
+* add credit method to reverse already captured transactions
+* add purchase method to authorize and capture in one step
+* dry code more
+
+
+Contribute
+==========
+
+* Fork the project.
+* Make your feature addition or bug fix.
+* Add specs for it. This is important so we don't break it in a
+  future version unintentionally.
+* Commit, do not mess with rakefile, version, or history.
+  (if you want to have your own version, that is fine but bump version in a commit by itself we can ignore when we pull)
+* Send us a pull request. Bonus points for topic branches.
   
-  
+
 Credits
 =======
 
