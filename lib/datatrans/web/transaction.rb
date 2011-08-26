@@ -36,7 +36,7 @@ module Datatrans::Web
   
   module ViewHelper
     def datatrans_notification_request_hidden_fields(transaction)
-      [
+      fields = [
         hidden_field_tag(:merchantId, Datatrans.merchant_id),
         hidden_field_tag(:hiddenMode, transaction.params[:hiddenMode]),
         hidden_field_tag(:reqtype, transaction.params[:reqtype]),
@@ -45,9 +45,15 @@ module Datatrans::Web
         hidden_field_tag(:useAlias, transaction.params[:useAlias]),
         hidden_field_tag(:sign, transaction.signature),
         hidden_field_tag(:refno, transaction.params[:refno]),
-        hidden_field_tag(:uppCustomerName, transaction.params[:uppCustomerName]),
-        hidden_field_tag(:uppCustomerEmail, transaction.params[:uppCustomerEmail])
-      ].join.html_safe
+      ]
+      
+      [:uppCustomerName, :uppCustomerEmail].each do |field_name|
+        if transaction.params[field_name].present?
+          fields << hidden_field_tag(field_name, transaction.params[field_name])
+        end
+      end
+      
+      fields.join.html_safe
     end
   end
 end
