@@ -3,28 +3,28 @@ require 'active_support/core_ext/hash'
 module Datatrans::Web
   class Transaction
     include Datatrans::Common
-    
+
     attr_accessor :request
     attr_reader :response, :params
-    
+
     def initialize(params)
-      raise 'Please define Datatrans.sign_key!' unless Datatrans.sign_key.present?
+      raise 'Please define Datatrans.sign_key or set it to false!' unless Datatrans.sign_key == false || Datatrans.sign_key.present?
 
       params = params.to_hash
       params.symbolize_keys!
       params.reverse_merge!({ :reqtype => 'NOA', :useAlias => 'Yes', :hiddenMode => 'Yes' })
       @params = params
     end
-    
+
     def signature
       sign(Datatrans.merchant_id, params[:amount], params[:currency], params[:refno])
     end
-    
+
     def authorize
       @response = AuthorizeResponse.new(params)
       @response.successful?
     end
-    
+
     def method_missing(method, *args, &block)
       if response.respond_to? method.to_sym
         response.send(method)
@@ -33,7 +33,7 @@ module Datatrans::Web
       end
     end
   end
-  
+
   module ViewHelper
     def datatrans_notification_request_hidden_fields(transaction)
       fields = [
@@ -46,13 +46,13 @@ module Datatrans::Web
         hidden_field_tag(:sign, transaction.signature),
         hidden_field_tag(:refno, transaction.params[:refno]),
       ]
-      
+
       [:uppCustomerName, :uppCustomerEmail].each do |field_name|
         if transaction.params[field_name].present?
           fields << hidden_field_tag(field_name, transaction.params[field_name])
         end
       end
-      
+
       fields.join.html_safe
     end
   end

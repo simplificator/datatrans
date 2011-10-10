@@ -14,6 +14,8 @@ Set your datatrans credentials in your environment.
       config.environment = :production
     end
 
+If you don't want to use signed requests (disabled in datatrans web console), you must set `config.sign_key` to `false`.
+
 Possible values for the environment: `:production`, `:development`
 
 Web Authorization
@@ -30,36 +32,36 @@ You need to pass at least `amount`, `currency` and `refno` (order number).
       :uppCustomerEmail => 'customer@email.com'
       # feel free to add more upp infos here ...
     })
-    
+
 In your View your show the credit card form with a convenient helper:
 
     = form_tag Datatrans.web_authorize_url do
-    
+
       = text_field_tag :paymentmethod, 'ECA'
       = text_field_tag :cardno
       = text_field_tag :expm
       = text_field_tag :expy
       = text_field_tag :cvv
-    
+
       = hidden_field_tag :successUrl, <your_application_return_url>
       = hidden_field_tag :cancelUrl, <your_application_return_url>
       = hidden_field_tag :errorUrl, <your_application_return_url>
-    
+
       = datatrans_notification_request_hidden_fields(@transaction)
-    
+
       = submit_tag "send"
-      
+
 In this example we use just ECA (Mastercard) as paymentmethod. Feel free to
 provide an appropriate select field to offer more payment methods. Don't forget
 to add `successUrl`, `cancelUrl` and `errorUrl`. We recommend to set them all
 to the same value.
- 
+
 After you submit the request to Datatrans they redirect back to your application.
 Now you can process the transaction like this:
 
     begin
       transaction = Datatrans::Web::Transaction.new(params)
-      
+
       if transaction.authorize
         # transaction was successful, access the following attributes
         # transaction.transaction_id
@@ -67,16 +69,16 @@ Now you can process the transaction like this:
         # transaction.masked_cc
         # transaction.authorization_code
         # ...
-        
+
       else
         # transaction was not successful, accces the error details
         # transaction.error_code, transaction.error_message, transaction.error_detail
-        
-      end 
+
+      end
     rescue Datatrans::InvalidSignatureError => exception
       # the signature was wrong, the request may have been compromised...
     end
-  
+
 XML Transactions
 ================
 
@@ -94,7 +96,7 @@ Authorize
       :expm => 12,
       :expy => 15
     )
-    
+
     if transaction.authorize
       # ok, the transaction is authorized...
       # access same values as in the web authorization (e.g. transaction.transaction_id)
@@ -114,13 +116,13 @@ To capture an authorized transaction you use the following code:
       :currency => 'CHF',
       :transaction_id => 19834324987349723948729834
     )
-    
+
     if transaction.capture
       # ok, the money is yours...
     else
       # transaction.error_code, transaction.error_message, transaction.error_detail
     end
-    
+
 
 Void
 ----
@@ -133,7 +135,7 @@ To make an authorized transaction invalid use void.
       :currency => 'CHF',
       :transaction_id => 19834324987349723948729834
     )
-    
+
     if transaction.void
       # ok, the transaction is not longer valid...
     else
@@ -163,7 +165,7 @@ Contribute
 * Commit, do not mess with rakefile, version, or history.
   (if you want to have your own version, that is fine but bump version in a commit by itself we can ignore when we pull)
 * Send us a pull request. Bonus points for topic branches.
-  
+
 
 Credits
 =======
