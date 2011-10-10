@@ -12,7 +12,7 @@ module Datatrans::Web
 
       params = params.to_hash
       params.symbolize_keys!
-      params.reverse_merge!({ :reqtype => 'NOA', :useAlias => 'Yes', :hiddenMode => 'Yes' })
+      params.reverse_merge!(:reqtype => 'NOA', :useAlias => 'yes', :hiddenMode => 'yes')
       @params = params
     end
 
