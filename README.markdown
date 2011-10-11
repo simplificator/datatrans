@@ -143,6 +143,14 @@ To make an authorized transaction invalid use void.
     end
 
 
+CHANGELOG
+=========
+
+2.2.2
+-------
+* added ability to skip signing by setting config.sign_key = false
+
+
 Todo
 ====
 
