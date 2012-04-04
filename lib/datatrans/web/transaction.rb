@@ -42,10 +42,10 @@ module Datatrans::Web
         hidden_field_tag(:reqtype, transaction.params[:reqtype]),
         hidden_field_tag(:amount, transaction.params[:amount]),
         hidden_field_tag(:currency, transaction.params[:currency]),
-        hidden_field_tag(:useAlias, transaction.params[:useAlias])
+        hidden_field_tag(:useAlias, transaction.params[:useAlias]),
+        hidden_field_tag(:sign, transaction.signature),
         hidden_field_tag(:refno, transaction.params[:refno]),
       ]
-      fields << hidden_field_tag(:sign, transaction.signature) if Datatrans.sign_key
 
       [:uppCustomerName, :uppCustomerEmail].each do |field_name|
         if transaction.params[field_name].present?
