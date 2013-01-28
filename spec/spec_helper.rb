@@ -1,10 +1,10 @@
 require 'rubygems'
 require 'bundler/setup'
 
+require 'active_support'
 require 'datatrans'
 
 RSpec.configure do |config|
-  
   config.before(:each) do
     Datatrans.configure do |config|
       config.merchant_id = '1100000000'
@@ -12,5 +12,4 @@ RSpec.configure do |config|
       config.environment = :development
     end
   end
-    
 end
