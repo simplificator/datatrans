@@ -2,11 +2,11 @@ require 'httparty'
 require 'builder'
 
 class Datatrans::XML::Transaction
-  class Request 
+  class Request
     include HTTParty
 
     attr_accessor :params
-    
+
     def initialize(params)
       @params = params
     end
@@ -14,10 +14,9 @@ class Datatrans::XML::Transaction
     def process
       raise 'overwrite in subclass!'
     end
-    
-    
+
     private
-    
+
     include Datatrans::Common
 
     def build_xml_request(service)
@@ -34,6 +33,5 @@ class Datatrans::XML::Transaction
       end
       xml.target!
     end
-    
   end
 end
