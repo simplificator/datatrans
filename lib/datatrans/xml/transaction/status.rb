@@ -13,7 +13,6 @@ class Datatrans::XML::Transaction
       ).parsed_response
     end
 
-
     private
 
     def build_status_request

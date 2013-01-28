@@ -16,6 +16,7 @@ module Datatrans
 
   mattr_accessor :merchant_id
   mattr_accessor :sign_key
+  mattr_accessor :proxy
 
   mattr_reader :base_url
   mattr_reader :web_authorize_url
