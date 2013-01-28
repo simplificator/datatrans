@@ -12,6 +12,12 @@ Set your datatrans credentials in your environment.
       config.merchant_id = '1234567'
       config.sign_key = 'ab739fd5b7c2a1...'
       config.environment = :production
+      config.proxy = {
+        :host => "proxy.com",
+        :port => 80,
+        :user => "hans",
+        :password => "xxx",
+      }
     end
 
 If you don't want to use signed requests (disabled in datatrans web console), you must set `config.sign_key` to `false`.
