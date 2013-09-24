@@ -4,8 +4,8 @@ require 'datatrans/xml/transaction/response'
 class Datatrans::XML::Transaction
   class StatusRequest < Request
     def process
-      self.class.post(
-        Datatrans.xml_status_url,
+      post(
+        self.datatrans.url(:xml_status_url),
         :headers => {
           'Content-Type' => 'text/xml'
         },

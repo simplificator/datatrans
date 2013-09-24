@@ -68,14 +68,14 @@ describe Datatrans::XML::Transaction::VoidRequest do
 
     context "build_void_request" do
       it "generates a valid datatrans void xml" do
-        @request = Datatrans::XML::Transaction::VoidRequest.new(@valid_params)
+        @request = Datatrans::XML::Transaction::VoidRequest.new(@datatrans, @valid_params)
         @request.send(:build_void_request).should == "<?xml version=\"1.0\" encoding=\"UTF-8\"?><paymentService version=\"1\"><body merchantId=\"1100000000\"><transaction refno=\"ABCDEF\"><request><amount>1000</amount><currency>CHF</currency><uppTransactionId>110808143302868124</uppTransactionId><reqtype>DOA</reqtype></request></transaction></body></paymentService>"
       end
     end
 
     context "process" do
       it "handles a valid datatrans void response" do
-        @transaction = Datatrans::XML::Transaction.new(@valid_params)
+        @transaction = Datatrans::XML::Transaction.new(@datatrans, @valid_params)
         @transaction.void.should be_true
       end
     end
@@ -84,7 +84,7 @@ describe Datatrans::XML::Transaction::VoidRequest do
   context "failed response" do
     before do
       Datatrans::XML::Transaction::VoidRequest.any_instance.stub(:process).and_return(@failed_response)
-      @transaction = Datatrans::XML::Transaction.new(@valid_params)
+      @transaction = Datatrans::XML::Transaction.new(@datatrans, @valid_params)
     end
 
     context "process" do

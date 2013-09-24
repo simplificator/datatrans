@@ -68,14 +68,14 @@ describe Datatrans::XML::Transaction::CaptureRequest do
 
     context "build_capture_request" do
       it "generates a valid datatrans capture xml" do
-        @request = Datatrans::XML::Transaction::CaptureRequest.new(@valid_params)
+        @request = Datatrans::XML::Transaction::CaptureRequest.new(@datatrans, @valid_params)
         @request.send(:build_capture_request).should == "<?xml version=\"1.0\" encoding=\"UTF-8\"?><paymentService version=\"1\"><body merchantId=\"1100000000\"><transaction refno=\"ABCDEF\"><request><amount>1000</amount><currency>CHF</currency><uppTransactionId>110808142256858007</uppTransactionId></request></transaction></body></paymentService>"
       end
     end
 
     context "process" do
       it "handles a valid datatrans capture response" do
-        @transaction = Datatrans::XML::Transaction.new(@valid_params)
+        @transaction = Datatrans::XML::Transaction.new(@datatrans, @valid_params)
         @transaction.capture.should be_true
       end
     end
@@ -84,7 +84,7 @@ describe Datatrans::XML::Transaction::CaptureRequest do
   context "failed response" do
     before do
       Datatrans::XML::Transaction::CaptureRequest.any_instance.stub(:process).and_return(@failed_response)
-      @transaction = Datatrans::XML::Transaction.new(@valid_params)
+      @transaction = Datatrans::XML::Transaction.new(@datatrans, @valid_params)
     end
 
     context "process" do

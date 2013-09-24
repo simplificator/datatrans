@@ -1,54 +1,71 @@
 require 'active_support/core_ext/module'
-require 'action_view'
+begin
+  require 'action_view'
+rescue
+end
 
 module Datatrans
-  BASE_URL = 'https://payment.datatrans.biz'
-  WEB_AUTHORIZE_URL = "#{BASE_URL}/upp/jsp/upStart.jsp"
-  XML_AUTHORIZE_URL = "#{BASE_URL}/upp/jsp/XML_authorize.jsp"
-  XML_SETTLEMENT_URL = "#{BASE_URL}/upp/jsp/XML_processor.jsp"
-  XML_STATUS_URL = "#{BASE_URL}/upp/jsp/XML_status.jsp"
+  class Config
+    ENVIRONMENTS = [:development, :production].freeze
+    DEFAULT_ENVIRONMENT = :development
 
-  TEST_BASE_URL = 'https://pilot.datatrans.biz'
-  TEST_WEB_AUTHORIZE_URL = "#{TEST_BASE_URL}/upp/jsp/upStart.jsp"
-  TEST_XML_AUTHORIZE_URL = "#{TEST_BASE_URL}/upp/jsp/XML_authorize.jsp"
-  TEST_XML_SETTLEMENT_URL = "#{TEST_BASE_URL}/upp/jsp/XML_processor.jsp"
-  TEST_XML_STATUS_URL = "#{TEST_BASE_URL}/upp/jsp/XML_status.jsp"
+    DEFAULT_SIGN_KEY = false
 
-  mattr_accessor :merchant_id
-  mattr_accessor :sign_key
-  mattr_accessor :proxy
+    BASE_URL_PRODUCTION = 'https://payment.datatrans.biz'.freeze
+    BASE_URL_DEVELOPMENT = 'https://pilot.datatrans.biz'.freeze
 
-  mattr_reader :base_url
-  mattr_reader :web_authorize_url
-  mattr_reader :xml_authorize_url
-  mattr_reader :xml_settlement_url
-  mattr_reader :xml_status_url
 
-  def self.configure
-    self.environment = :development # default
-    yield self
-  end
+    URLS = {
+      :development => {
+        :web_authorize_url  => "#{BASE_URL_PRODUCTION}/upp/jsp/upStart.jsp".freeze,
+        :xml_authorize_url  => "#{BASE_URL_PRODUCTION}/upp/jsp/XML_authorize.jsp".freeze,
+        :xml_settlement_url => "#{BASE_URL_PRODUCTION}/upp/jsp/XML_processor.jsp".freeze,
+        :xml_status_url     => "#{BASE_URL_PRODUCTION}/upp/jsp/XML_status.jsp".freeze
+      },
+      :production => {
+        :web_authorize_url  => "#{BASE_URL_DEVELOPMENT}/upp/jsp/upStart.jsp".freeze,
+        :xml_authorize_url  => "#{BASE_URL_DEVELOPMENT}/upp/jsp/XML_authorize.jsp".freeze,
+        :xml_settlement_url => "#{BASE_URL_DEVELOPMENT}/upp/jsp/XML_processor.jsp".freeze,
+        :xml_status_url     => "#{BASE_URL_DEVELOPMENT}/upp/jsp/XML_status.jsp".freeze
+      }.freeze
+    }.freeze
 
-  def self.environment=(environment)
-    case environment
-    when :development
-      @@base_url           = TEST_BASE_URL
-      @@web_authorize_url  = TEST_WEB_AUTHORIZE_URL
-      @@xml_authorize_url  = TEST_XML_AUTHORIZE_URL
-      @@xml_settlement_url = TEST_XML_SETTLEMENT_URL
-      @@xml_status_url     = TEST_XML_STATUS_URL
-    when :production
-      @@base_url           = BASE_URL
-      @@web_authorize_url  = WEB_AUTHORIZE_URL
-      @@xml_authorize_url  = XML_AUTHORIZE_URL
-      @@xml_settlement_url = XML_SETTLEMENT_URL
-      @@xml_status_url     = XML_STATUS_URL
-    else
-      raise "Unknown environment '#{environment}'. Available: :development, :production."
+
+    attr_reader :environment, :merchant_id, :sign_key, :proxy
+
+    # Configure with following options
+    # * :merchant_id (required)
+    # * :sign_key (defaults to false)
+    # * :environment (defaults to :development, available environments are defined in ENVIRONMENTS)
+    # * :proxy (a hash containing :http_proxyaddr, :http_proxyport, :http_proxyuser, :http_proxypass)
+    def initialize(options = {})
+      @merchant_id = options[:merchant_id]
+      raise ArgumentError.new(":merchant_id is required") unless self.merchant_id
+      self.environment = options[:environment] || DEFAULT_ENVIRONMENT
+      @sign_key = options[:sign_key] || DEFAULT_SIGN_KEY
+      @proxy = options[:proxy] || {}
     end
+
+
+    def environment=(environment)
+      environment = environment.try(:to_sym)
+      if ENVIRONMENTS.include?(environment)
+        @environment = environment
+      else
+        raise "Unknown environment '#{environment}'. Available: #{ENVIRONMENTS.join(', ')}"
+      end
+    end
+
+
+    # Access a url, is automatically scoped to environment
+    def url(what)
+      URLS[self.environment][what]
+    end
+
   end
 
   class InvalidSignatureError < StandardError; end
+
 end
 
 require 'datatrans/version'

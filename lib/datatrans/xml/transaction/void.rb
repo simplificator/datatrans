@@ -4,7 +4,7 @@ require 'datatrans/xml/transaction/response'
 class Datatrans::XML::Transaction
   class VoidRequest < Request
     def process
-      self.class.post(Datatrans.xml_settlement_url,
+      post(self.datatrans.url(:xml_settlement_url),
         :headers => { 'Content-Type' => 'text/xml' },
         :body => build_void_request.to_s).parsed_response
     end

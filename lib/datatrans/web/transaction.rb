@@ -5,11 +5,10 @@ module Datatrans::Web
     include Datatrans::Common
 
     attr_accessor :request
-    attr_reader :response, :params
+    attr_reader :response, :params, :datatrans
 
-    def initialize(params)
-      raise 'Please define Datatrans.sign_key or set it to false!' unless Datatrans.sign_key == false || Datatrans.sign_key.present?
-
+    def initialize(datatrans, params)
+      @datatrans = datatrans
       params = params.to_hash
       params.symbolize_keys!
       params.reverse_merge!(:reqtype => 'NOA', :useAlias => 'yes', :hiddenMode => 'yes')
@@ -17,11 +16,11 @@ module Datatrans::Web
     end
 
     def signature
-      sign(Datatrans.merchant_id, params[:amount], params[:currency], params[:refno])
+      sign(self.datatrans.merchant_id, params[:amount], params[:currency], params[:refno])
     end
 
     def authorize
-      @response = AuthorizeResponse.new(params)
+      @response = AuthorizeResponse.new(datatrans, params)
       @response.successful?
     end
 
@@ -35,9 +34,9 @@ module Datatrans::Web
   end
 
   module ViewHelper
-    def datatrans_notification_request_hidden_fields(transaction)
+    def datatrans_notification_request_hidden_fields(datatrans, transaction)
       fields = [
-        hidden_field_tag(:merchantId, Datatrans.merchant_id),
+        hidden_field_tag(:merchantId, datatrans.merchant_id),
         hidden_field_tag(:hiddenMode, transaction.params[:hiddenMode]),
         hidden_field_tag(:reqtype, transaction.params[:reqtype]),
         hidden_field_tag(:amount, transaction.params[:amount]),

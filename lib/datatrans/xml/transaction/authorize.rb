@@ -4,7 +4,7 @@ require 'datatrans/xml/transaction/response'
 class Datatrans::XML::Transaction
   class AuthorizeRequest < Request
     def process
-      self.class.post(Datatrans.xml_authorize_url,
+      post(self.datatrans.url(:xml_authorize_url),
         :headers => { 'Content-Type' => 'text/xml' },
         :body => build_authorize_request.to_s).parsed_response
     end
@@ -18,7 +18,7 @@ class Datatrans::XML::Transaction
         xml.aliasCC params[:aliasCC]
         xml.expm params[:expm]
         xml.expy params[:expy]
-        xml.sign sign(Datatrans.merchant_id, params[:amount], params[:currency], params[:refno])
+        xml.sign sign(self.datatrans.merchant_id, params[:amount], params[:currency], params[:refno])
       end
     end
   end
