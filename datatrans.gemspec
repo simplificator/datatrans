@@ -5,8 +5,8 @@ require "datatrans/version"
 Gem::Specification.new do |s|
   s.name        = "datatrans"
   s.version     = Datatrans::VERSION
-  s.authors     = ["Tobias Miesel", "Thomas Maurer", "Corin Langosch"]
-  s.email       = ["tobias.miesel@simplificator.com", "thomas.maurer@simplificator.com", "corin.langosch@simplificator.com"]
+  s.authors     = ["Tobias Miesel", "Thomas Maurer", "Corin Langosch", "Pascal Betz"]
+  s.email       = ["info@simplificator.com"]
   s.homepage    = ""
   s.summary     = %q{Datatrans Integration for Ruby on Rails}
   s.description = %q{Datatrans Integration for Ruby on Rails}

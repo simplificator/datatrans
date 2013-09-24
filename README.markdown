@@ -20,7 +20,9 @@ Buidl your Datatrans Configuration like so:
       }
     )
 
+
 If you don't want to use signed requests (disabled in datatrans web console), you can set `config.sign_key` to `false`.
+The configuration is then used as parameter to all the constructors and helpers, see examples below.
 
 Possible values for the environment: `:production`, `:development`
 
@@ -30,8 +32,6 @@ Web Authorization
 If you want to process a credit card the first time a web authorization is
 necessary. Add the following code to a controller action that shows the form.
 You need to pass at least `amount`, `currency` and `refno` (order number).
-    @datatrans = Datatrans.new(...)
-    @datatrans.web_transaction(params)
     @transaction = Datatrans::Web::Transaction.new(datatrans, {
       :amount => 1000, # in cents!
       :currency => 'CHF',
