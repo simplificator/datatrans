@@ -66,14 +66,14 @@ describe Datatrans::XML::Transaction::StatusRequest do
 
     context "build_status_request" do
       it "generates a valid datatrans status xml" do
-        @request = Datatrans::XML::Transaction::StatusRequest.new(@valid_params)
+        @request = Datatrans::XML::Transaction::StatusRequest.new(@datatrans, @valid_params)
         @request.send(:build_status_request).should == "<?xml version=\"1.0\" encoding=\"UTF-8\"?><statusService version=\"1\"><body merchantId=\"1100000000\"><transaction refno=\"\"><request><uppTransactionId>111013090000394044</uppTransactionId></request></transaction></body></statusService>"
       end
     end
 
     context "process" do
       it "handles a valid datatrans status response" do
-        @transaction = Datatrans::XML::Transaction.new(@valid_params)
+        @transaction = Datatrans::XML::Transaction.new(@datatrans, @valid_params)
         @transaction.status.should be_true
       end
     end
@@ -82,7 +82,7 @@ describe Datatrans::XML::Transaction::StatusRequest do
   context "failed response" do
     before do
       Datatrans::XML::Transaction::StatusRequest.any_instance.stub(:process).and_return(@failed_response)
-      @transaction = Datatrans::XML::Transaction.new(@valid_params)
+      @transaction = Datatrans::XML::Transaction.new(@datatrans, @valid_params)
     end
 
     context "process" do

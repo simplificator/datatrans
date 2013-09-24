@@ -3,33 +3,34 @@ require 'active_support/core_ext/hash'
 module Datatrans::XML
   class Transaction
     attr_accessor :request
-    attr_reader :response, :params
+    attr_reader :response, :params, :datatrans
 
-    def initialize(params)
+    def initialize(datatrans, params)
+      @datatrans = datatrans
       @params = params.symbolize_keys
     end
 
     def authorize
-      self.request = AuthorizeRequest.new(params)
-      @response = AuthorizeResponse.new(request.process)
+      self.request = AuthorizeRequest.new(self.datatrans, params)
+      @response = AuthorizeResponse.new(self.datatrans, request.process)
       @response.successful?
     end
 
     def void
-      self.request = VoidRequest.new(params)
-      @response = VoidResponse.new(request.process)
+      self.request = VoidRequest.new(self.datatrans, params)
+      @response = VoidResponse.new(self.datatrans, request.process)
       @response.successful?
     end
 
     def capture
-      self.request = CaptureRequest.new(params)
-      @response = CaptureResponse.new(request.process)
+      self.request = CaptureRequest.new(self.datatrans, params)
+      @response = CaptureResponse.new(self.datatrans, request.process)
       @response.successful?
     end
 
     def status
-      self.request = StatusRequest.new(params)
-      @response = StatusResponse.new(request.process)
+      self.request = StatusRequest.new(self.datatrans, params)
+      @response = StatusResponse.new(self.datatrans, request.process)
       @response.successful?
     end
 
