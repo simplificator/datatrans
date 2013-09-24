@@ -13,7 +13,7 @@ RSpec.configure do |config|
     @datatrans = Datatrans::Config.new(
       :merchant_id => '1100000000',
       :sign_key => 'd777c17ba2010282c2d2350a68b441ca07a799d294bfaa630b7c8442207c0b69703cc55775b0ca5a4e455b818a9bb10a43669c0c20ce31f4a43f10e0cabb9525',
-      :environment => :development,
+      :environment => :development
     )
   end
 end
