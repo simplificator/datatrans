@@ -6,21 +6,23 @@ Ruby adapter for the Datatrans payment gateway (http://www.datatrans.ch).
 Configuration
 -------------
 
-Set your datatrans credentials in your environment.
+Buidl your Datatrans Configuration like so:
 
-    Datatrans.configure do |config|
-      config.merchant_id = '1234567'
-      config.sign_key = 'ab739fd5b7c2a1...'
-      config.environment = :production
-      config.proxy = {
-        :host => "proxy.com",
-        :port => 80,
-        :user => "hans",
-        :password => "xxx",
+    datatrans = Datatrans::Config.new(
+      :merchant_id => '1234567',
+      :sign_key => 'ab739fd5b7c2a1...',
+      :environment => :production,
+      :proxy => {
+        :http_proxyaddr => "proxy.com",
+        :http_proxyport => 80,
+        :http_proxyuser => "hans",
+        :http_proxpass => "xxx",
       }
-    end
+    )
 
-If you don't want to use signed requests (disabled in datatrans web console), you must set `config.sign_key` to `false`.
+
+If you don't want to use signed requests (disabled in datatrans web console), you can set `config.sign_key` to `false`.
+The configuration is then used as parameter to all the constructors and helpers, see examples below.
 
 Possible values for the environment: `:production`, `:development`
 
@@ -30,8 +32,7 @@ Web Authorization
 If you want to process a credit card the first time a web authorization is
 necessary. Add the following code to a controller action that shows the form.
 You need to pass at least `amount`, `currency` and `refno` (order number).
-
-    @transaction = Datatrans::Web::Transaction.new({
+    @transaction = Datatrans::Web::Transaction.new(datatrans, {
       :amount => 1000, # in cents!
       :currency => 'CHF',
       :refno => 'ABCDEF',
@@ -53,7 +54,7 @@ In your View your show the credit card form with a convenient helper:
       = hidden_field_tag :cancelUrl, <your_application_return_url>
       = hidden_field_tag :errorUrl, <your_application_return_url>
 
-      = datatrans_notification_request_hidden_fields(@transaction)
+      = datatrans_notification_request_hidden_fields(datatrans, @transaction)
 
       = submit_tag "send"
 
@@ -66,7 +67,7 @@ After you submit the request to Datatrans they redirect back to your application
 Now you can process the transaction like this:
 
     begin
-      transaction = Datatrans::Web::Transaction.new(params)
+      transaction = Datatrans::Web::Transaction.new(datatrans, params)
 
       if transaction.authorize
         # transaction was successful, access the following attributes
@@ -94,7 +95,7 @@ use the convenient XML methods to process payments.
 Authorize
 ---------
 
-    transaction = Datatrans::XML::Transaction.new(
+    transaction = Datatrans::XML::Transaction.new(datatrans,
       :refno => 'ABCDEF',
       :amount => 1000, # in cents!
       :currency => 'CHF',
@@ -116,7 +117,7 @@ Capture
 
 To capture an authorized transaction you use the following code:
 
-    transaction = Datatrans::XML::Transaction.new(
+    transaction = Datatrans::XML::Transaction.new(datatrans,
       :refno => 'ABCDEF',
       :amount => 1000, # in cents!
       :currency => 'CHF',
@@ -135,7 +136,7 @@ Void
 
 To make an authorized transaction invalid use void.
 
-    transaction = Datatrans::XML::Transaction.new(
+    transaction = Datatrans::XML::Transaction.new(datatrans,
       :refno => 'ABCDEF',
       :amount => 1000, # in cents!
       :currency => 'CHF',
@@ -151,6 +152,11 @@ To make an authorized transaction invalid use void.
 
 CHANGELOG
 =========
+
+3.0.0
+-------
+* Refactored Code to allow multiple configurations
+* Proxy config now uses HTTParty naming convention.
 
 2.2.2
 -------

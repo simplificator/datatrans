@@ -1,8 +1,9 @@
 class Datatrans::XML::Transaction
   class Response
-    attr_reader :params
+    attr_reader :params, :datatrans
 
-    def initialize(params)
+    def initialize(datatrans, params)
+      @datatrans = datatrans
       @params = params
     end
 

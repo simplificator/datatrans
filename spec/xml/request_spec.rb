@@ -1,32 +1,40 @@
 require 'spec_helper'
 
 describe Datatrans::XML::Transaction::Request do
-  describe "ClassMethods" do
-    describe "set_default_options" do
-      it "should set the current proxy settings" do
-        Datatrans.configure do |config|
-          config.proxy = {
-            :host => "test.com",
-            :port => 123,
-            :user => "hans",
-            :password => "wurst",
-          }
-        end
-        Datatrans::XML::Transaction::Request.should_receive(:http_proxy).with(Datatrans.proxy[:host], Datatrans.proxy[:port], Datatrans.proxy[:user], Datatrans.proxy[:password])
-        Datatrans::XML::Transaction::Request.set_default_options
+  describe "Proxy" do
+    describe "configured" do
+      before(:each) do
+        @datatrans = Datatrans::Config.new(
+          :merchant_id => '1100000000',
+          :sign_key => 'd777c17ba2010282c2d2350a68b441ca07a799d294bfaa630b7c8442207c0b69703cc55775b0ca5a4e455b818a9bb10a43669c0c20ce31f4a43f10e0cabb9525',
+          :key => "value",
+          :proxy => {
+            :http_proxyaddr => "proxy.com",
+            :http_proxyport => 80,
+            :http_proxyuser => "hans",
+            :http_proxpass => "xxx",
+          },
+          :environment => :development
+        )
 
-        Datatrans.configure do |config|
-          config.proxy = nil
-        end
-        Datatrans::XML::Transaction::Request.should_receive(:http_proxy).with(nil, nil, nil, nil)
-        Datatrans::XML::Transaction::Request.set_default_options
+      end
+      it "forward those options to HTTParty" do
+        request = Datatrans::XML::Transaction::Request.new(@datatrans, {})
+        HTTParty.should_receive(:post).with('lirum',
+         :params => {:foo => :bar},
+           :http_proxpass => 'xxx',
+           :http_proxyuser => 'hans',
+           :http_proxyaddr => 'proxy.com',
+            :http_proxyport => 80)
+        request.post('lirum', :params => {:foo => :bar})
       end
     end
 
-    describe "post" do
-      it "should update the default options and perform the request afterwards" do
-        Datatrans::XML::Transaction::Request.should_receive(:set_default_options)
-        Datatrans::XML::Transaction::Request.perform_request(Net::HTTP::Post, "http://example.com", :a => "b")
+    describe "not configured" do
+      it "should not add any proxy settings" do
+        request = Datatrans::XML::Transaction::Request.new(@datatrans, {})
+        HTTParty.should_receive(:post).with('lirum', :params => {:foo => :bar})
+        request.post('lirum', :params => {:foo => :bar})
       end
     end
   end

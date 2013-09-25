@@ -69,12 +69,12 @@ describe Datatrans::Web::Transaction do
 
   context "rails form helper" do
     before do
-      @transaction = Datatrans::Web::Transaction.new(@valid_params)
+      @transaction = Datatrans::Web::Transaction.new(@datatrans, @valid_params)
       @view = ActionView::Base.new
     end
 
     it "should generate valid form field string" do
-      @view.datatrans_notification_request_hidden_fields(@transaction).should == "<input id=\"merchantId\" name=\"merchantId\" type=\"hidden\" value=\"1100000000\" /><input id=\"hiddenMode\" name=\"hiddenMode\" type=\"hidden\" value=\"yes\" /><input id=\"reqtype\" name=\"reqtype\" type=\"hidden\" value=\"NOA\" /><input id=\"amount\" name=\"amount\" type=\"hidden\" value=\"1000\" /><input id=\"currency\" name=\"currency\" type=\"hidden\" value=\"CHF\" /><input id=\"useAlias\" name=\"useAlias\" type=\"hidden\" value=\"yes\" /><input id=\"sign\" name=\"sign\" type=\"hidden\" value=\"0402fb3fba8c6fcb40df9b7756e7e637\" /><input id=\"refno\" name=\"refno\" type=\"hidden\" value=\"ABCDEF\" /><input id=\"uppCustomerDetails\" name=\"uppCustomerDetails\" type=\"hidden\" /><input id=\"uppCustomerEmail\" name=\"uppCustomerEmail\" type=\"hidden\" value=\"customer@email.com\" />"
+      @view.datatrans_notification_request_hidden_fields(@datatrans, @transaction).should == "<input id=\"merchantId\" name=\"merchantId\" type=\"hidden\" value=\"1100000000\" /><input id=\"hiddenMode\" name=\"hiddenMode\" type=\"hidden\" value=\"yes\" /><input id=\"reqtype\" name=\"reqtype\" type=\"hidden\" value=\"NOA\" /><input id=\"amount\" name=\"amount\" type=\"hidden\" value=\"1000\" /><input id=\"currency\" name=\"currency\" type=\"hidden\" value=\"CHF\" /><input id=\"useAlias\" name=\"useAlias\" type=\"hidden\" value=\"yes\" /><input id=\"sign\" name=\"sign\" type=\"hidden\" value=\"0402fb3fba8c6fcb40df9b7756e7e637\" /><input id=\"refno\" name=\"refno\" type=\"hidden\" value=\"ABCDEF\" /><input id=\"uppCustomerDetails\" name=\"uppCustomerDetails\" type=\"hidden\" /><input id=\"uppCustomerEmail\" name=\"uppCustomerEmail\" type=\"hidden\" value=\"customer@email.com\" />"
     end
   end
 
@@ -85,7 +85,7 @@ describe Datatrans::Web::Transaction do
 
     context "process" do
       it "handles a valid datatrans authorize response" do
-        @transaction = Datatrans::Web::Transaction.new(@valid_params)
+        @transaction = Datatrans::Web::Transaction.new(@datatrans, @valid_params)
         @transaction.authorize.should be_true
       end
     end
@@ -96,7 +96,7 @@ describe Datatrans::Web::Transaction do
       fake_response = @successful_response
       fake_response[:sign2] = 'invalid'
       Datatrans::Web::Transaction::AuthorizeResponse.any_instance.stub(:params).and_return(fake_response)
-      @transaction = Datatrans::Web::Transaction.new(@valid_params)
+      @transaction = Datatrans::Web::Transaction.new(@datatrans, @valid_params)
     end
 
     it "raises an exception if sign2 is invalid" do
@@ -109,7 +109,7 @@ describe Datatrans::Web::Transaction do
   context "failed response" do
     before do
       Datatrans::Web::Transaction::AuthorizeResponse.any_instance.stub(:params).and_return(@failed_response)
-      @transaction = Datatrans::Web::Transaction.new(@valid_params)
+      @transaction = Datatrans::Web::Transaction.new(@datatrans, @valid_params)
     end
 
     context "process" do
