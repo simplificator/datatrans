@@ -32,13 +32,13 @@ Web Authorization
 If you want to process a credit card the first time a web authorization is
 necessary. Add the following code to a controller action that shows the form.
 You need to pass at least `amount`, `currency` and `refno` (order number).
-    @transaction = Datatrans::Web::Transaction.new(datatrans, {
+    @transaction = datatrans.web_transaction(
       :amount => 1000, # in cents!
       :currency => 'CHF',
       :refno => 'ABCDEF',
-      :uppCustomerEmail => 'customer@email.com'
+      :uppCustomerEmail => 'customer@email.com',
       # feel free to add more upp infos here ...
-    })
+    )
 
 In your View your show the credit card form with a convenient helper:
 
@@ -67,7 +67,7 @@ After you submit the request to Datatrans they redirect back to your application
 Now you can process the transaction like this:
 
     begin
-      transaction = Datatrans::Web::Transaction.new(datatrans, params)
+      transaction = datatrans.web_transaction(params)
 
       if transaction.authorize
         # transaction was successful, access the following attributes
@@ -95,13 +95,13 @@ use the convenient XML methods to process payments.
 Authorize
 ---------
 
-    transaction = Datatrans::XML::Transaction.new(datatrans,
+    transaction = datatrans.xml_transaction(
       :refno => 'ABCDEF',
       :amount => 1000, # in cents!
       :currency => 'CHF',
       :aliasCC => '8383843729284848348',
       :expm => 12,
-      :expy => 15
+      :expy => 15,
     )
 
     if transaction.authorize
@@ -117,11 +117,11 @@ Capture
 
 To capture an authorized transaction you use the following code:
 
-    transaction = Datatrans::XML::Transaction.new(datatrans,
+    transaction = datatrans.xml_transaction(
       :refno => 'ABCDEF',
       :amount => 1000, # in cents!
       :currency => 'CHF',
-      :transaction_id => 19834324987349723948729834
+      :transaction_id => 19834324987349723948729834,
     )
 
     if transaction.capture
@@ -136,11 +136,11 @@ Void
 
 To make an authorized transaction invalid use void.
 
-    transaction = Datatrans::XML::Transaction.new(datatrans,
+    transaction = datatrans.xml_transaction(
       :refno => 'ABCDEF',
       :amount => 1000, # in cents!
       :currency => 'CHF',
-      :transaction_id => 19834324987349723948729834
+      :transaction_id => 19834324987349723948729834,
     )
 
     if transaction.void

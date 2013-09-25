@@ -51,5 +51,13 @@ module Datatrans
     def url(what)
       URLS[self.environment][what]
     end
+
+    def web_transaction(*args)
+      Web::Transaction.new(self, *args)
+    end
+
+    def xml_transaction(*args)
+      XML::Transaction.new(self, *args)
+    end
   end
 end
