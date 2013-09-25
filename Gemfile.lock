@@ -6,6 +6,7 @@ PATH
       builder
       httparty
       i18n
+      multi_xml (>= 0.5.1)
 
 GEM
   remote: http://rubygems.org/
