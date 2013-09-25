@@ -12,6 +12,7 @@ require 'datatrans/web/transaction'
 
 begin
   require 'action_view'
+  require 'datatrans/web/view_helper'
   ActionView::Base.send(:include, Datatrans::Web::ViewHelper)
 rescue LoadError
 end
