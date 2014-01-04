@@ -153,6 +153,10 @@ To make an authorized transaction invalid use void.
 CHANGELOG
 =========
 
+3.0.2
+-------
+Specified MIT License.
+
 3.0.0
 -------
 * Refactored Code to allow multiple configurations
