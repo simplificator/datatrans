@@ -18,6 +18,7 @@ class Datatrans::XML::Transaction
     def build_status_request
       build_xml_request(:status) do |xml|
         xml.uppTransactionId params[:transaction_id]
+        xml.refno params[:refno]
       end
     end
   end

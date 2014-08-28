@@ -56,6 +56,7 @@ describe Datatrans::XML::Transaction::StatusRequest do
 
     @valid_params = {
       :transaction_id => '111013090000394044',
+      :refno => '1234567-037',
     }
   end
 
@@ -67,7 +68,7 @@ describe Datatrans::XML::Transaction::StatusRequest do
     context "build_status_request" do
       it "generates a valid datatrans status xml" do
         @request = Datatrans::XML::Transaction::StatusRequest.new(@datatrans, @valid_params)
-        @request.send(:build_status_request).should == "<?xml version=\"1.0\" encoding=\"UTF-8\"?><statusService version=\"1\"><body merchantId=\"1100000000\"><transaction refno=\"\"><request><uppTransactionId>111013090000394044</uppTransactionId></request></transaction></body></statusService>"
+        @request.send(:build_status_request).should == "<?xml version=\"1.0\" encoding=\"UTF-8\"?><statusService version=\"1\"><body merchantId=\"1100000000\"><transaction refno=\"1234567-037\"><request><uppTransactionId>111013090000394044</uppTransactionId><refno>1234567-037</refno></request></transaction></body></statusService>"
       end
     end
 
