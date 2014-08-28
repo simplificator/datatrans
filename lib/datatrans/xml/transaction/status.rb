@@ -18,6 +18,7 @@ class Datatrans::XML::Transaction
     def build_status_request
       build_xml_request(:status) do |xml|
         xml.uppTransactionId params[:transaction_id]
+        xml.refno params[:refno]
       end
     end
   end
@@ -73,6 +74,10 @@ class Datatrans::XML::Transaction
 
     def payment_method
       params_root_node['response']['pmethod'] rescue nil
+    end
+
+    def transaction_id
+      params_root_node['response']['uppTransactionId'] rescue nil
     end
 
     private
