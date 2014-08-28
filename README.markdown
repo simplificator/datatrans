@@ -32,6 +32,7 @@ Web Authorization
 If you want to process a credit card the first time a web authorization is
 necessary. Add the following code to a controller action that shows the form.
 You need to pass at least `amount`, `currency` and `refno` (order number).
+
     @transaction = datatrans.web_transaction(
       :amount => 1000, # in cents!
       :currency => 'CHF',
