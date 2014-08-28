@@ -76,6 +76,10 @@ class Datatrans::XML::Transaction
       params_root_node['response']['pmethod'] rescue nil
     end
 
+    def transaction_id
+      params_root_node['response']['uppTransactionId'] rescue nil
+    end
+
     private
 
     def params_root_node
