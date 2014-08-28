@@ -25,7 +25,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'multi_xml', '>= 0.5.1'
 
   s.add_development_dependency 'rake'
-  s.add_development_dependency 'rspec'
+  s.add_development_dependency 'rspec', '~> 2.14.1'
   s.add_development_dependency 'actionpack', '>= 3.0.0'
   s.license = 'MIT'
 end
