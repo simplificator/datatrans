@@ -1,5 +1,7 @@
 require 'rubygems'
 require 'bundler/setup'
+require "codeclimate-test-reporter"
+CodeClimate::TestReporter.start
 
 require 'active_support'
 require 'datatrans'
