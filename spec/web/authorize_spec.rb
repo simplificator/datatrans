@@ -32,6 +32,12 @@ describe Datatrans::Web::Transaction do
       :acqAuthorizationCode => "173520"
     }
 
+    @successful_swisspost_response = @successful_response.merge({
+        :pmethod => "PFC",
+        :txtEp2TrxID => "7777777000000001",
+        :responseMessage => "YellowPay transaction Ok"
+    })
+
     @failed_response = {
       :status => "error",
       :returnCustomerCountry => "CHE",
@@ -81,6 +87,19 @@ describe Datatrans::Web::Transaction do
   context "successful response" do
     before do
       Datatrans::Web::Transaction::AuthorizeResponse.any_instance.stub(:params).and_return(@successful_response)
+    end
+
+    context "process" do
+      it "handles a valid datatrans authorize response" do
+        @transaction = Datatrans::Web::Transaction.new(@datatrans, @valid_params)
+        @transaction.authorize.should be_true
+      end
+    end
+  end
+
+  context "successful response (swiss post)" do
+    before do
+      Datatrans::Web::Transaction::AuthorizeResponse.any_instance.stub(:params).and_return(@successful_swisspost_response)
     end
 
     context "process" do
