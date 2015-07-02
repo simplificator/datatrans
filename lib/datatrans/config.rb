@@ -35,6 +35,7 @@ module Datatrans
       raise ArgumentError.new(":merchant_id is required") unless self.merchant_id
       self.environment = options[:environment] || DEFAULT_ENVIRONMENT
       @sign_key = options[:sign_key] || DEFAULT_SIGN_KEY
+      @sign_key = DEFAULT_SIGN_KEY if !@sign_key || @sign_key.empty?
       @proxy = options[:proxy] || {}
     end
 
