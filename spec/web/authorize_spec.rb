@@ -7,7 +7,7 @@ describe Datatrans::Web::Transaction do
     @successful_response = {
       :status => "success",
       :returnCustomerCountry => "CHE",
-      :sign => "95f3111123e628eab6469c636e0d3f06",
+      :sign => "174b7758e3b4342be827531a1d9c290f",
       :aliasCC => "70323122544311173",
       :maskedCC => "520000xxxxxx0007",
       :responseMessage => "Authorized",
@@ -35,7 +35,7 @@ describe Datatrans::Web::Transaction do
     @failed_response = {
       :status => "error",
       :returnCustomerCountry => "CHE",
-      :sign => "95f3123246e628eab6469c636e0d3f06",
+      :sign => "174b7758e3b4342be827531a1d9c290f",
       :aliasCC => "70323122544311173",
       :maskedCC => "520000xxxxxx0007",
       :errorMessage => "declined",
@@ -84,6 +84,24 @@ describe Datatrans::Web::Transaction do
     end
 
     context "process" do
+      it "handles a valid datatrans authorize response" do
+        @transaction = Datatrans::Web::Transaction.new(@datatrans, @valid_params)
+        @transaction.authorize.should be_true
+      end
+    end
+
+    context 'different keys were used for signing' do
+      before do
+        @datatrans = Datatrans::Config.new(
+              :merchant_id => @datatrans.merchant_id,
+              :sign_key_1 => @datatrans.sign_key + 'foo',
+              :sign_key_2 => @datatrans.sign_key,
+              :environment => @datatrans.environment
+            )
+
+        @successful_response[:sign] = '1603c05a7e6a3221ad2d1a750246fcdb'
+      end
+
       it "handles a valid datatrans authorize response" do
         @transaction = Datatrans::Web::Transaction.new(@datatrans, @valid_params)
         @transaction.authorize.should be_true
