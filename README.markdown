@@ -1,3 +1,6 @@
+[![Build Status](https://travis-ci.org/simplificator/datatrans.svg?branch=master)](https://travis-ci.org/simplificator/datatrans)
+[![Code Climate](https://codeclimate.com/github/simplificator/datatrans/badges/gpa.svg)](https://codeclimate.com/github/simplificator/datatrans)
+
 Datatrans
 =========
 
@@ -23,6 +26,16 @@ Build your Datatrans Configuration like so:
 
 If you don't want to use signed requests (disabled in datatrans web console), you can set `config.sign_key` to `false`.
 The configuration is then used as parameter to all the constructors and helpers, see examples below.
+
+If you set to use 2 different keys in datatrans web console, you can setup Configuration like this:
+
+    datatrans = Datatrans::Config.new(
+      :merchant_id => '1234567',
+      :sign_key_1 => 'ab739fd5b7c2a1...',
+      :sign_key_2 => '9438d7ndshkjh9...',
+      :environment => :production,
+    )
+
 
 Possible values for the environment: `:production`, `:development`
 

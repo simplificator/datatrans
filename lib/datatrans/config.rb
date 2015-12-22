@@ -23,18 +23,24 @@ module Datatrans
       }.freeze
     }.freeze
 
-    attr_reader :environment, :merchant_id, :sign_key, :proxy
+    attr_reader :environment, :merchant_id, :sign_key_1, :sign_key_2, :proxy
+
+    def sign_key
+      sign_key_2
+    end
 
     # Configure with following options
     # * :merchant_id (required)
-    # * :sign_key (defaults to false)
+    # * :sign_key_1 (defaults to :sign_key_2)
+    # * :sign_key_2 (defaults to false)
     # * :environment (defaults to :development, available environments are defined in ENVIRONMENTS)
     # * :proxy (a hash containing :http_proxyaddr, :http_proxyport, :http_proxyuser, :http_proxypass)
     def initialize(options = {})
       @merchant_id = options[:merchant_id]
       raise ArgumentError.new(":merchant_id is required") unless self.merchant_id
       self.environment = options[:environment] || DEFAULT_ENVIRONMENT
-      @sign_key = options[:sign_key] || DEFAULT_SIGN_KEY
+      @sign_key_2 = options[:sign_key_2] || options[:sign_key] || DEFAULT_SIGN_KEY
+      @sign_key_1 = options[:sign_key_1] || @sign_key_2
       @proxy = options[:proxy] || {}
     end
 

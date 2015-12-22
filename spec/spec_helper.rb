@@ -1,10 +1,16 @@
 require 'rubygems'
 require 'bundler/setup'
-require "codeclimate-test-reporter"
-CodeClimate::TestReporter.start
+
+begin
+  require "codeclimate-test-reporter"
+  CodeClimate::TestReporter.start
+rescue LoadError
+  STDERR.puts 'No CodeClimate::TestReporter installed'
+end
 
 require 'active_support'
 require 'datatrans'
+require 'nokogiri'
 
 RSpec.configure do |config|
   config.filter_run :focus => true

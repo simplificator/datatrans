@@ -7,7 +7,7 @@ describe Datatrans::Web::Transaction do
     @successful_response = {
       :status => "success",
       :returnCustomerCountry => "CHE",
-      :sign => "95f3111123e628eab6469c636e0d3f06",
+      :sign => "174b7758e3b4342be827531a1d9c290f",
       :aliasCC => "70323122544311173",
       :maskedCC => "520000xxxxxx0007",
       :responseMessage => "Authorized",
@@ -35,7 +35,7 @@ describe Datatrans::Web::Transaction do
     @failed_response = {
       :status => "error",
       :returnCustomerCountry => "CHE",
-      :sign => "95f3123246e628eab6469c636e0d3f06",
+      :sign => "174b7758e3b4342be827531a1d9c290f",
       :aliasCC => "70323122544311173",
       :maskedCC => "520000xxxxxx0007",
       :errorMessage => "declined",
@@ -73,8 +73,27 @@ describe Datatrans::Web::Transaction do
       @view = ActionView::Base.new
     end
 
+    def html_to_json(html)
+      elements = Nokogiri::HTML::DocumentFragment.parse(html).xpath('input')
+      attributes = elements.inject({}) do |memo, element|
+                                 attrs = element.attributes.inject({}) do |h,(_,a)|
+                                   h[a.name] = a.value
+                                   h
+                                 end
+                                 memo[attrs.delete('name')] = Hash[attrs.sort_by {|k,_| k}]
+                                 memo
+                               end
+      Hash[attributes.sort_by {|k,_| k}]
+    end
+
     it "should generate valid form field string" do
-      @view.datatrans_notification_request_hidden_fields(@datatrans, @transaction).should == "<input id=\"merchantId\" name=\"merchantId\" type=\"hidden\" value=\"1100000000\" /><input id=\"hiddenMode\" name=\"hiddenMode\" type=\"hidden\" value=\"yes\" /><input id=\"reqtype\" name=\"reqtype\" type=\"hidden\" value=\"NOA\" /><input id=\"amount\" name=\"amount\" type=\"hidden\" value=\"1000\" /><input id=\"currency\" name=\"currency\" type=\"hidden\" value=\"CHF\" /><input id=\"useAlias\" name=\"useAlias\" type=\"hidden\" value=\"yes\" /><input id=\"sign\" name=\"sign\" type=\"hidden\" value=\"0402fb3fba8c6fcb40df9b7756e7e637\" /><input id=\"refno\" name=\"refno\" type=\"hidden\" value=\"ABCDEF\" /><input id=\"uppCustomerDetails\" name=\"uppCustomerDetails\" type=\"hidden\" /><input id=\"uppCustomerEmail\" name=\"uppCustomerEmail\" type=\"hidden\" value=\"customer@email.com\" />"
+      expected = "<input type=\"hidden\" name=\"merchantId\" id=\"merchantId\" value=\"1100000000\" /><input type=\"hidden\" name=\"hiddenMode\" id=\"hiddenMode\" value=\"yes\" /><input type=\"hidden\" name=\"reqtype\" id=\"reqtype\" value=\"NOA\" /><input type=\"hidden\" name=\"amount\" id=\"amount\" value=\"1000\" /><input type=\"hidden\" name=\"currency\" id=\"currency\" value=\"CHF\" /><input type=\"hidden\" name=\"useAlias\" id=\"useAlias\" value=\"yes\" /><input type=\"hidden\" name=\"sign\" id=\"sign\" value=\"0402fb3fba8c6fcb40df9b7756e7e637\" /><input type=\"hidden\" name=\"refno\" id=\"refno\" value=\"ABCDEF\" /><input type=\"hidden\" name=\"uppCustomerDetails\" id=\"uppCustomerDetails\" /><input type=\"hidden\" name=\"uppCustomerEmail\" id=\"uppCustomerEmail\" value=\"customer@email.com\" />"
+      actual   = @view.datatrans_notification_request_hidden_fields(@datatrans, @transaction)
+
+      expected_attributes = html_to_json(expected)
+      actual_attributes   = html_to_json(actual)
+
+      actual_attributes.should == expected_attributes
     end
   end
 
@@ -84,6 +103,24 @@ describe Datatrans::Web::Transaction do
     end
 
     context "process" do
+      it "handles a valid datatrans authorize response" do
+        @transaction = Datatrans::Web::Transaction.new(@datatrans, @valid_params)
+        @transaction.authorize.should be_true
+      end
+    end
+
+    context 'different keys were used for signing' do
+      before do
+        @datatrans = Datatrans::Config.new(
+              :merchant_id => @datatrans.merchant_id,
+              :sign_key_1 => @datatrans.sign_key + 'foo',
+              :sign_key_2 => @datatrans.sign_key,
+              :environment => @datatrans.environment
+            )
+
+        @successful_response[:sign] = '1603c05a7e6a3221ad2d1a750246fcdb'
+      end
+
       it "handles a valid datatrans authorize response" do
         @transaction = Datatrans::Web::Transaction.new(@datatrans, @valid_params)
         @transaction.authorize.should be_true
