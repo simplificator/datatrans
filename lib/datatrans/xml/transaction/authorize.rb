@@ -12,26 +12,14 @@ class Datatrans::XML::Transaction
     private
 
     def build_authorize_request
-      if params.has_key?(:reqtype)
-        build_xml_request(:authorization) do |xml|
-          xml.amount params[:amount]
-          xml.currency params[:currency]
-          xml.aliasCC params[:aliasCC]
-          xml.expm params[:expm]
-          xml.expy params[:expy]
-          xml.reqtype params.has_key?(:reqtype) ? params[:reqtype] : 'NOA'
-          xml.sign sign(self.datatrans.merchant_id, params[:amount], params[:currency], params[:refno])
-        end
-      else
-        build_xml_request(:authorization) do |xml|
-          xml.amount params[:amount]
-          xml.currency params[:currency]
-          xml.aliasCC params[:aliasCC]
-          xml.expm params[:expm]
-          xml.expy params[:expy]
-          xml.reqtype params.has_key?(:reqtype) ? params[:reqtype] : 'NOA'
-          xml.sign sign(self.datatrans.merchant_id, params[:amount], params[:currency], params[:refno])
-        end
+      build_xml_request(:authorization) do |xml|
+        xml.amount params[:amount]
+        xml.currency params[:currency]
+        xml.aliasCC params[:aliasCC]
+        xml.expm params[:expm]
+        xml.expy params[:expy]
+        xml.reqtype params[:reqtype] if params.has_key?(:reqtype)
+        xml.sign sign(self.datatrans.merchant_id, params[:amount], params[:currency], params[:refno])
       end
     end
   end

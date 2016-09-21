@@ -80,7 +80,8 @@ describe Datatrans::XML::Transaction::AuthorizeRequest do
     context "build_authorize_request" do
       it "generates a valid datatrans authorize xml" do
         @request = Datatrans::XML::Transaction::AuthorizeRequest.new(@datatrans, @valid_params)
-        @request.send(:build_authorize_request).should == "<?xml version=\"1.0\" encoding=\"UTF-8\"?><authorizationService version=\"1\"><body merchantId=\"1100000000\"><transaction refno=\"ABCDEF\"><request><amount>1000</amount><currency>CHF</currency><aliasCC>3784982984234</aliasCC><expm>12</expm><expy>15</expy><sign>0402fb3fba8c6fcb40df9b7756e7e637</sign></request></transaction></body></authorizationService>"
+        reqtype = @valid_params[:reqtype].present? ? "<reqtype>#{@valid_params[:reqtype]}</reqtype>":""
+        @request.send(:build_authorize_request).should == "<?xml version=\"1.0\" encoding=\"UTF-8\"?><authorizationService version=\"1\"><body merchantId=\"1100000000\"><transaction refno=\"ABCDEF\"><request><amount>1000</amount><currency>CHF</currency><aliasCC>3784982984234</aliasCC><expm>12</expm><expy>15</expy>#{reqtype}<sign>0402fb3fba8c6fcb40df9b7756e7e637</sign></request></transaction></body></authorizationService>"
       end
     end
 
