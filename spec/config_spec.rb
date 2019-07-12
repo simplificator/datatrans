@@ -8,13 +8,13 @@ describe Datatrans::Config do
 
     describe "web_transaction" do
       it "builds a new web transaction object" do
-        @datatrans.web_transaction({}).class.should eq(Datatrans::Web::Transaction)
+        expect(@datatrans.web_transaction({}).class).to eq(Datatrans::Web::Transaction)
       end
     end
 
     describe "xml_transaction" do
       it "builds a new xml transaction object" do
-        @datatrans.xml_transaction({}).class.should eq(Datatrans::XML::Transaction)
+        expect(@datatrans.xml_transaction({}).class).to eq(Datatrans::XML::Transaction)
       end
     end
   end
