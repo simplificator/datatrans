@@ -63,40 +63,40 @@ describe Datatrans::XML::Transaction::VoidRequest do
 
   context "successful response" do
     before do
-      Datatrans::XML::Transaction::VoidRequest.any_instance.stub(:process).and_return(@successful_response)
+      allow_any_instance_of(Datatrans::XML::Transaction::VoidRequest).to receive(:process).and_return(@successful_response)
     end
 
     context "build_void_request" do
       it "generates a valid datatrans void xml" do
         @request = Datatrans::XML::Transaction::VoidRequest.new(@datatrans, @valid_params)
-        @request.send(:build_void_request).should == "<?xml version=\"1.0\" encoding=\"UTF-8\"?><paymentService version=\"1\"><body merchantId=\"1100000000\"><transaction refno=\"ABCDEF\"><request><amount>1000</amount><currency>CHF</currency><uppTransactionId>110808143302868124</uppTransactionId><reqtype>DOA</reqtype></request></transaction></body></paymentService>"
+        expect(@request.send(:build_void_request)).to eq "<?xml version=\"1.0\" encoding=\"UTF-8\"?><paymentService version=\"1\"><body merchantId=\"1100000000\"><transaction refno=\"ABCDEF\"><request><amount>1000</amount><currency>CHF</currency><uppTransactionId>110808143302868124</uppTransactionId><reqtype>DOA</reqtype></request></transaction></body></paymentService>"
       end
     end
 
     context "process" do
       it "handles a valid datatrans void response" do
         @transaction = Datatrans::XML::Transaction.new(@datatrans, @valid_params)
-        @transaction.void.should be_true
+        expect(@transaction.void).to be true
       end
     end
   end
 
   context "failed response" do
     before do
-      Datatrans::XML::Transaction::VoidRequest.any_instance.stub(:process).and_return(@failed_response)
+      allow_any_instance_of(Datatrans::XML::Transaction::VoidRequest).to receive(:process).and_return(@failed_response)
       @transaction = Datatrans::XML::Transaction.new(@datatrans, @valid_params)
     end
 
     context "process" do
       it "handles a failed datatrans void response" do
-        @transaction.void.should be_false
+        expect(@transaction.void).to be false
       end
 
       it "returns error details" do
         @transaction.void
-        @transaction.error_code.length.should > 0
-        @transaction.error_message.length.should > 0
-        @transaction.error_detail.length.should > 0
+        expect(@transaction.error_code.length).to be > 0
+        expect(@transaction.error_message.length).to be > 0
+        expect(@transaction.error_detail.length).to be > 0
       end
     end
   end

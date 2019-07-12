@@ -20,7 +20,7 @@ describe Datatrans::XML::Transaction::Request do
       end
       it "forward those options to HTTParty" do
         request = Datatrans::XML::Transaction::Request.new(@datatrans, {})
-        HTTParty.should_receive(:post).with('lirum',
+        expect(HTTParty).to receive(:post).with('lirum',
          :params => {:foo => :bar},
            :http_proxpass => 'xxx',
            :http_proxyuser => 'hans',
@@ -33,7 +33,7 @@ describe Datatrans::XML::Transaction::Request do
     describe "not configured" do
       it "should not add any proxy settings" do
         request = Datatrans::XML::Transaction::Request.new(@datatrans, {})
-        HTTParty.should_receive(:post).with('lirum', :params => {:foo => :bar})
+        expect(HTTParty).to receive(:post).with('lirum', :params => {:foo => :bar})
         request.post('lirum', :params => {:foo => :bar})
       end
     end
