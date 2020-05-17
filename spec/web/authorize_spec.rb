@@ -80,19 +80,19 @@ describe Datatrans::Web::Transaction do
     end
 
     it "should generate valid form field string" do
-      @view.datatrans_notification_request_hidden_fields(@datatrans, @transaction).should == "<input id=\"merchantId\" name=\"merchantId\" type=\"hidden\" value=\"1100000000\" /><input id=\"hiddenMode\" name=\"hiddenMode\" type=\"hidden\" value=\"yes\" /><input id=\"reqtype\" name=\"reqtype\" type=\"hidden\" value=\"NOA\" /><input id=\"amount\" name=\"amount\" type=\"hidden\" value=\"1000\" /><input id=\"currency\" name=\"currency\" type=\"hidden\" value=\"CHF\" /><input id=\"useAlias\" name=\"useAlias\" type=\"hidden\" value=\"yes\" /><input id=\"sign\" name=\"sign\" type=\"hidden\" value=\"0402fb3fba8c6fcb40df9b7756e7e637\" /><input id=\"refno\" name=\"refno\" type=\"hidden\" value=\"ABCDEF\" /><input id=\"uppCustomerDetails\" name=\"uppCustomerDetails\" type=\"hidden\" /><input id=\"uppCustomerEmail\" name=\"uppCustomerEmail\" type=\"hidden\" value=\"customer@email.com\" />"
+      expect(@view.datatrans_notification_request_hidden_fields(@datatrans, @transaction)).to eq "<input type=\"hidden\" name=\"merchantId\" id=\"merchantId\" value=\"1100000000\" /><input type=\"hidden\" name=\"hiddenMode\" id=\"hiddenMode\" value=\"yes\" /><input type=\"hidden\" name=\"reqtype\" id=\"reqtype\" value=\"NOA\" /><input type=\"hidden\" name=\"amount\" id=\"amount\" value=\"1000\" /><input type=\"hidden\" name=\"currency\" id=\"currency\" value=\"CHF\" /><input type=\"hidden\" name=\"useAlias\" id=\"useAlias\" value=\"yes\" /><input type=\"hidden\" name=\"sign\" id=\"sign\" value=\"0402fb3fba8c6fcb40df9b7756e7e637\" /><input type=\"hidden\" name=\"refno\" id=\"refno\" value=\"ABCDEF\" /><input type=\"hidden\" name=\"uppCustomerDetails\" id=\"uppCustomerDetails\" /><input type=\"hidden\" name=\"uppCustomerEmail\" id=\"uppCustomerEmail\" value=\"customer@email.com\" />"
     end
   end
 
   context "successful response" do
     before do
-      Datatrans::Web::Transaction::AuthorizeResponse.any_instance.stub(:params).and_return(@successful_response)
+      allow_any_instance_of(Datatrans::Web::Transaction::AuthorizeResponse).to receive(:params).and_return(@successful_response)
     end
 
     context "process" do
       it "handles a valid datatrans authorize response" do
         @transaction = Datatrans::Web::Transaction.new(@datatrans, @valid_params)
-        @transaction.authorize.should be_true
+        expect(@transaction.authorize).to be true
       end
     end
   end
@@ -114,7 +114,7 @@ describe Datatrans::Web::Transaction do
     before do
       fake_response = @successful_response
       fake_response[:sign2] = 'invalid'
-      Datatrans::Web::Transaction::AuthorizeResponse.any_instance.stub(:params).and_return(fake_response)
+      allow_any_instance_of(Datatrans::Web::Transaction::AuthorizeResponse).to receive(:params).and_return(fake_response)
       @transaction = Datatrans::Web::Transaction.new(@datatrans, @valid_params)
     end
 
@@ -127,20 +127,20 @@ describe Datatrans::Web::Transaction do
 
   context "failed response" do
     before do
-      Datatrans::Web::Transaction::AuthorizeResponse.any_instance.stub(:params).and_return(@failed_response)
+      allow_any_instance_of(Datatrans::Web::Transaction::AuthorizeResponse).to receive(:params).and_return(@failed_response)
       @transaction = Datatrans::Web::Transaction.new(@datatrans, @valid_params)
     end
 
     context "process" do
       it "handles a failed datatrans authorize response" do
-        @transaction.authorize.should be_false
+        expect(@transaction.authorize).to be false
       end
 
       it "returns error details" do
         @transaction.authorize
-        @transaction.error_code.length.should > 0
-        @transaction.error_message.length.should > 0
-        @transaction.error_detail.length.should > 0
+        expect(@transaction.error_code.length).to be > 0
+        expect(@transaction.error_message.length).to be > 0
+        expect(@transaction.error_detail.length).to be > 0
       end
     end
   end

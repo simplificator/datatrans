@@ -6,7 +6,7 @@ Ruby adapter for the Datatrans payment gateway (http://www.datatrans.ch).
 Configuration
 -------------
 
-Buidl your Datatrans Configuration like so:
+Build your Datatrans Configuration like so:
 
     datatrans = Datatrans::Config.new(
       :merchant_id => '1234567',
