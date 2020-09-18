@@ -34,8 +34,13 @@ module Datatrans::XML
       @response.successful?
     end
 
-    # TODO: purchase, credit methods
+    def credit
+      self.request = CreditRequest.new(self.datatrans, params)
+      @response = CreditResponse.new(self.datatrans, request.process)
+      @response.successful?
+    end
 
+    # TODO: purchase
 
     def method_missing(method, *args, &block)
       if response.respond_to? method.to_sym
@@ -53,4 +58,5 @@ require 'datatrans/xml/transaction/authorize'
 require 'datatrans/xml/transaction/void'
 require 'datatrans/xml/transaction/capture'
 require 'datatrans/xml/transaction/status'
+require 'datatrans/xml/transaction/credit'
 

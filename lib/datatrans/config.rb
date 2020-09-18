@@ -14,12 +14,14 @@ module Datatrans
         :xml_authorize_url  => "#{BASE_URL_DEVELOPMENT}/upp/jsp/XML_authorize.jsp".freeze,
         :xml_settlement_url => "#{BASE_URL_DEVELOPMENT}/upp/jsp/XML_processor.jsp".freeze,
         :xml_status_url     => "#{BASE_URL_DEVELOPMENT}/upp/jsp/XML_status.jsp".freeze,
+        :xml_credit_url     => "#{BASE_URL_DEVELOPMENT}/upp/jsp/XML_processor.jsp".freeze,
       },
       :production => {
         :web_authorize_url  => "#{BASE_URL_PRODUCTION}/upp/jsp/upStart.jsp".freeze,
         :xml_authorize_url  => "#{BASE_URL_PRODUCTION}/upp/jsp/XML_authorize.jsp".freeze,
         :xml_settlement_url => "#{BASE_URL_PRODUCTION}/upp/jsp/XML_processor.jsp".freeze,
         :xml_status_url     => "#{BASE_URL_PRODUCTION}/upp/jsp/XML_status.jsp".freeze,
+        :xml_credit_url     => "#{BASE_URL_PRODUCTION}/upp/jsp/XML_processor.jsp".freeze,
       }.freeze
     }.freeze
 
