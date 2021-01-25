@@ -38,6 +38,10 @@ describe Datatrans::Web::Transaction do
         :responseMessage => "YellowPay transaction Ok"
     })
 
+    @canceled_response = @successful_response.merge({
+      status: "cancel",
+    })
+
     @failed_response = {
       :status => "error",
       :returnCustomerCountry => "CHE",
@@ -99,14 +103,25 @@ describe Datatrans::Web::Transaction do
 
   context "successful response (swiss post)" do
     before do
-      Datatrans::Web::Transaction::AuthorizeResponse.any_instance.stub(:params).and_return(@successful_swisspost_response)
+      allow_any_instance_of(Datatrans::Web::Transaction::AuthorizeResponse).to receive(:params).and_return(@successful_swisspost_response)
     end
 
     context "process" do
       it "handles a valid datatrans authorize response" do
         @transaction = Datatrans::Web::Transaction.new(@datatrans, @valid_params)
-        @transaction.authorize.should be_true
+        expect(@transaction.authorize).to be true
       end
+    end
+  end
+
+  context "canceled response" do
+    before do
+      allow_any_instance_of(Datatrans::Web::Transaction::AuthorizeResponse).to receive(:params).and_return(@canceled_response)
+      @transaction = Datatrans::Web::Transaction.new(@datatrans, @valid_params)
+    end
+
+    it "handles a canceled datatrans authorize response" do
+      expect(@transaction.authorize).to be false
     end
   end
 
