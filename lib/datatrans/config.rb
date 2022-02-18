@@ -5,23 +5,11 @@ module Datatrans
 
     DEFAULT_SIGN_KEY = false
 
-    BASE_URL_PRODUCTION = 'https://pay.datatrans.com'.freeze
-    BASE_URL_DEVELOPMENT = 'https://pay.sandbox.datatrans.com'.freeze
-
-    URLS = {
-      :development => {
-        :web_authorize_url  => "#{BASE_URL_DEVELOPMENT}/upp/jsp/upStart.jsp".freeze,
-        :xml_authorize_url  => "#{BASE_URL_DEVELOPMENT}/upp/jsp/XML_authorize.jsp".freeze,
-        :xml_settlement_url => "#{BASE_URL_DEVELOPMENT}/upp/jsp/XML_processor.jsp".freeze,
-        :xml_status_url     => "#{BASE_URL_DEVELOPMENT}/upp/jsp/XML_status.jsp".freeze,
-      },
-      :production => {
-        :web_authorize_url  => "#{BASE_URL_PRODUCTION}/upp/jsp/upStart.jsp".freeze,
-        :xml_authorize_url  => "#{BASE_URL_PRODUCTION}/upp/jsp/XML_authorize.jsp".freeze,
-        :xml_settlement_url => "#{BASE_URL_PRODUCTION}/upp/jsp/XML_processor.jsp".freeze,
-        :xml_status_url     => "#{BASE_URL_PRODUCTION}/upp/jsp/XML_status.jsp".freeze,
-      }.freeze
-    }.freeze
+    SUBDOMAINS = {
+      payment_page: 'pay',
+      server_to_server_api: 'api'
+    }
+    DOMAIN = 'datatrans.com'
 
     attr_reader :environment, :merchant_id, :sign_key, :proxy
 
@@ -49,7 +37,24 @@ module Datatrans
 
     # Access a url, is automatically scoped to environment
     def url(what)
-      URLS[self.environment][what]
+      case what
+      when :web_authorize_url
+        subdomain = SUBDOMAINS[:payment_page]
+        path = '/upp/jsp/upStart.jsp'
+      when :xml_authorize_url
+        subdomain = SUBDOMAINS[:server_to_server_api]
+        path = '/upp/jsp/XML_authorize.jsp'
+      when :xml_settlement_url
+        subdomain = SUBDOMAINS[:server_to_server_api]
+        path = '/upp/jsp/XML_processor.jsp'
+      when :xml_status_url
+        subdomain = SUBDOMAINS[:server_to_server_api]
+        path = '/upp/jsp/XML_status.jsp'
+      else
+        raise "Unknown wanted action '#{what}'."
+      end
+      subdomain += '.sandbox' unless self.environment == :production
+      "https://#{subdomain}.#{DOMAIN}#{path}"
     end
 
     def web_transaction(*args)
