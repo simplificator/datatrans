@@ -1,5 +1,4 @@
-#encoding: utf-8
-
+require 'action_controller'
 require 'spec_helper'
 
 describe Datatrans::Web::Transaction do
@@ -70,7 +69,12 @@ describe Datatrans::Web::Transaction do
   context "rails form helper" do
     before do
       @transaction = Datatrans::Web::Transaction.new(@datatrans, @valid_params)
-      @view = ActionView::Base.new
+
+      if Gem.loaded_specs['activesupport'].version >= Gem::Version.create('6.0')
+        @view = ActionView::Base.new(ActionController::Base.view_paths, {}, {})
+      else
+        @view = ActionView::Base.new
+      end
     end
 
     it "should generate valid form field string" do
