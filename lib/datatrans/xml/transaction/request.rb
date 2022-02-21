@@ -8,7 +8,7 @@ class Datatrans::XML::Transaction
 
     def post(url, options = {})
       options = options.merge(self.datatrans.proxy)
-      HTTParty.post(url, options)
+      HTTParty.post(url, **options)
     end
 
     def initialize(datatrans, params)
