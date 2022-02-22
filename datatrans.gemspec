@@ -18,14 +18,17 @@ Gem::Specification.new do |s|
   s.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
   s.require_paths = ["lib"]
 
+  s.required_ruby_version = '>= 2.6'
+
   s.add_dependency 'httparty'
-  s.add_dependency 'activesupport', '>= 3.0.0'
+  s.add_dependency 'activesupport', '>= 5.2'
   s.add_dependency 'i18n'
   s.add_dependency 'builder'
   s.add_dependency 'multi_xml', '>= 0.5.1'
 
+  s.add_development_dependency 'actionpack', '>= 5.2'
+  s.add_development_dependency 'appraisal'
   s.add_development_dependency 'rake'
   s.add_development_dependency 'rspec'
-  s.add_development_dependency 'actionpack', '>= 3.0.0'
   s.license = 'MIT'
 end

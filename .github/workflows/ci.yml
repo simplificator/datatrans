@@ -1,0 +1,40 @@
+---
+name: CI
+on: [push, pull_request]
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        ruby: [ '2.6', '2.7', '3.0', '3.1' ]
+        rails: [ '5-2', '6-0', '6-1', '7-0' ]
+        exclude:
+          - ruby: 2.6 # Rails 7 requires 2.7 minimum
+            rails: 7-0
+          - ruby: 3.0 # Ruby 3 support for 5.2 hasn't been added
+            rails: 5-2
+          - ruby: 3.1 # Ruby 3.1 only works on the latest Rails 7 version
+            rails: 5-2
+          - ruby: 3.1
+            rails: 6-0
+          - ruby: 3.1
+            rails: 6-1
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby }}
+          bundler-cache: false
+
+      - name: Bundle for Appraisal
+        run: bundle
+
+      - name: Install Appraisal dependencies
+        run: bundle exec appraisal rails-${{ matrix.rails }} bundle
+
+      - name: Run tests
+        run: bundle exec appraisal rails-${{ matrix.rails }} bundle exec rspec
