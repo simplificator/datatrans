@@ -7,8 +7,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## 4.0.0 - 2022-02-25
 ### Changed
-* [BREAKING CHANGE] Bump minimum required Ruby version to 2.6 and Rails to 5.2 (@andyundso #34)
-* Change Datatrans hostnames (@rgisiger #32)
+* [BREAKING CHANGE] Bump minimum required Ruby version to 2.6 and Rails to 5.2 (@andyundso [#34](https://github.com/simplificator/datatrans/pull/34))
+* Change Datatrans hostnames (@rgisiger [#32](https://github.com/simplificator/datatrans/pull/32))
 
 ## 3.0.2 - 2014-01-04
 ### Added
