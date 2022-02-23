@@ -149,24 +149,6 @@ To make an authorized transaction invalid use void.
       # transaction.error_code, transaction.error_message, transaction.error_detail
     end
 
-
-CHANGELOG
-=========
-
-3.0.2
--------
-Specified MIT License.
-
-3.0.0
--------
-* Refactored Code to allow multiple configurations
-* Proxy config now uses HTTParty naming convention.
-
-2.2.2
--------
-* added ability to skip signing by setting config.sign_key = false
-
-
 Todo
 ====
 
