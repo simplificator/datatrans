@@ -31,6 +31,12 @@ describe Datatrans::Web::Transaction do
       :acqAuthorizationCode => "173520"
     }
 
+    @successful_swisspost_response = @successful_response.merge({
+      :pmethod => "PFC",
+      :txtEp2TrxID => "7777777000000001",
+      :responseMessage => "YellowPay transaction Ok"
+    })
+
     @failed_response = {
       :status => "error",
       :returnCustomerCountry => "CHE",
@@ -78,7 +84,7 @@ describe Datatrans::Web::Transaction do
     end
 
     it 'should generate valid form field string' do
-      if Gem.loaded_specs['activesupport'].version >= Gem::Version.create('7.0')
+      if Gem.loaded_specs['activesupport'].version >= Gem::Version.create('6.0')
         expected_output = '<input type="hidden" name="merchantId" id="merchantId" value="1100000000" autocomplete="off" /><input type="hidden" name="hiddenMode" id="hiddenMode" value="yes" autocomplete="off" /><input type="hidden" name="reqtype" id="reqtype" value="NOA" autocomplete="off" /><input type="hidden" name="amount" id="amount" value="1000" autocomplete="off" /><input type="hidden" name="currency" id="currency" value="CHF" autocomplete="off" /><input type="hidden" name="useAlias" id="useAlias" value="yes" autocomplete="off" /><input type="hidden" name="sign" id="sign" value="0402fb3fba8c6fcb40df9b7756e7e637" autocomplete="off" /><input type="hidden" name="refno" id="refno" value="ABCDEF" autocomplete="off" /><input type="hidden" name="uppCustomerDetails" id="uppCustomerDetails" autocomplete="off" /><input type="hidden" name="uppCustomerEmail" id="uppCustomerEmail" value="customer@email.com" autocomplete="off" />'
       else
         expected_output = '<input type="hidden" name="merchantId" id="merchantId" value="1100000000" /><input type="hidden" name="hiddenMode" id="hiddenMode" value="yes" /><input type="hidden" name="reqtype" id="reqtype" value="NOA" /><input type="hidden" name="amount" id="amount" value="1000" /><input type="hidden" name="currency" id="currency" value="CHF" /><input type="hidden" name="useAlias" id="useAlias" value="yes" /><input type="hidden" name="sign" id="sign" value="0402fb3fba8c6fcb40df9b7756e7e637" /><input type="hidden" name="refno" id="refno" value="ABCDEF" /><input type="hidden" name="uppCustomerDetails" id="uppCustomerDetails" /><input type="hidden" name="uppCustomerEmail" id="uppCustomerEmail" value="customer@email.com" />'
@@ -91,6 +97,19 @@ describe Datatrans::Web::Transaction do
   context "successful response" do
     before do
       allow_any_instance_of(Datatrans::Web::Transaction::AuthorizeResponse).to receive(:params).and_return(@successful_response)
+    end
+
+    context "process" do
+      it "handles a valid datatrans authorize response" do
+        @transaction = Datatrans::Web::Transaction.new(@datatrans, @valid_params)
+        expect(@transaction.authorize).to be true
+      end
+    end
+  end
+
+  context "successful response (swiss post)" do
+    before do
+      allow_any_instance_of(Datatrans::Web::Transaction::AuthorizeResponse).to receive(:params).and_return(@successful_swisspost_response)
     end
 
     context "process" do
