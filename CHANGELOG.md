@@ -5,9 +5,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## 4.0.1 - 2022-03-18
 ### Fixed
 * Check for successful transaction depends on `status` and not on `response_message` that can be diferent for different payment methods (@schmijos [#8](https://github.com/simplificator/datatrans/pull/8) and @TatianaPan [#39](https://github.com/simplificator/datatrans/pull/39))
-
 ## 4.0.0 - 2022-02-25
 ### Changed
 * [BREAKING CHANGE] Bump minimum required Ruby version to 2.6 and Rails to 5.2 (@andyundso [#34](https://github.com/simplificator/datatrans/pull/34))
