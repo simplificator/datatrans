@@ -1,7 +1,15 @@
 require 'rubygems'
 require 'bundler/setup'
 require 'simplecov'
-SimpleCov.start
+
+SimpleCov.start do
+  formatter SimpleCov::Formatter::MultiFormatter.new(
+    [
+      SimpleCov::Formatter::JSONFormatter,
+      SimpleCov::Formatter::HTMLFormatter
+    ]
+  )
+end
 
 require 'active_support'
 require 'datatrans'

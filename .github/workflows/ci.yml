@@ -36,5 +36,17 @@ jobs:
       - name: Install Appraisal dependencies
         run: bundle exec appraisal rails-${{ matrix.rails }} bundle
 
+      - name: Fetch CodeClimate test reporter
+        run: curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+
+      - name: Make test reporter executable
+        run: chmod +x ./cc-test-reporter
+
+      - name: Prepare CodeClimate for incoming build results
+        run: ./cc-test-reporter before-build
+
       - name: Run tests
         run: bundle exec appraisal rails-${{ matrix.rails }} bundle exec rspec
+
+      - name: Sent build results to CodeClimate
+        run: ./cc-test-reporter after-build
