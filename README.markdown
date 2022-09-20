@@ -11,6 +11,7 @@ Build your Datatrans Configuration like so:
     datatrans = Datatrans::Config.new(
       :merchant_id => '1234567',
       :sign_key => 'ab739fd5b7c2a1...',
+      :password => 'server to server request password',
       :environment => :production,
       :proxy => {
         :http_proxyaddr => "proxy.com",
