@@ -11,10 +11,11 @@ module Datatrans
     }
     DOMAIN = 'datatrans.com'
 
-    attr_reader :environment, :merchant_id, :sign_key, :proxy
+    attr_reader :environment, :merchant_id, :sign_key, :password, :proxy
 
     # Configure with following options
     # * :merchant_id (required)
+    # * :password (required)
     # * :sign_key (defaults to false)
     # * :environment (defaults to :development, available environments are defined in ENVIRONMENTS)
     # * :proxy (a hash containing :http_proxyaddr, :http_proxyport, :http_proxyuser, :http_proxypass)
@@ -22,6 +23,8 @@ module Datatrans
       @merchant_id = options[:merchant_id]
       raise ArgumentError.new(":merchant_id is required") unless self.merchant_id
       self.environment = options[:environment] || DEFAULT_ENVIRONMENT
+      @password = options[:password]
+      raise ArgumentError.new(":password is required") unless self.password
       @sign_key = options[:sign_key] || DEFAULT_SIGN_KEY
       @proxy = options[:proxy] || {}
     end

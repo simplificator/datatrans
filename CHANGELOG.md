@@ -5,6 +5,12 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+### Changed
+
+* [BREAKING CHANGE] Authenticate requests with HTTP Basic Auth (@crackofdusk [#41](https://github.com/simplificator/datatrans/pull/41))
+
+  Datatrans requires [HTTP Basic Auth for XML API calls](https://api-reference.datatrans.ch/xml/#authentication-tls) since 2022-09-14 ([announcement](https://mailchi.mp/datatrans/basic-authsign2_1-email_en))
+
 ## 4.0.1 - 2022-03-18
 ### Fixed
 * Check for successful transaction depends on `status` and not on `response_message` that can be diferent for different payment methods (@schmijos [#8](https://github.com/simplificator/datatrans/pull/8) and @TatianaPan [#39](https://github.com/simplificator/datatrans/pull/39))

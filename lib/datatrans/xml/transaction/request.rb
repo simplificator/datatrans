@@ -7,7 +7,9 @@ class Datatrans::XML::Transaction
     attr_accessor :params, :datatrans
 
     def post(url, options = {})
-      options = options.merge(self.datatrans.proxy)
+      options = options
+        .merge(self.datatrans.proxy)
+        .merge(:basic_auth => { :username => self.datatrans.merchant_id, :password => self.datatrans.password })
       HTTParty.post(url, **options)
     end
 
