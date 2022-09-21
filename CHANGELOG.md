@@ -5,6 +5,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## 5.0.0 - 2022-09-21
+
 ### Changed
 
 * [BREAKING CHANGE] Authenticate requests with HTTP Basic Auth (@crackofdusk [#41](https://github.com/simplificator/datatrans/pull/41))
