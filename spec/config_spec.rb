@@ -17,5 +17,11 @@ describe Datatrans::Config do
         expect(@datatrans.xml_transaction({}).class).to eq(Datatrans::XML::Transaction)
       end
     end
+
+    describe "json_transaction" do
+      it "builds a new json transaction object" do
+        expect(@datatrans.json_transaction({}).class).to eq(Datatrans::JSON::Transaction)
+      end
+    end
   end
 end
