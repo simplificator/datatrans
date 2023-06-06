@@ -81,9 +81,5 @@ module Datatrans
     def json_transaction(*args)
       JSON::Transaction.new(self, *args)
     end
-
-    def start_json_transaction(*args)
-      JSON::Transaction.new(self, *args).transaction_path
-    end
   end
 end
