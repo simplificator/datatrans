@@ -3,7 +3,7 @@ require "spec_helper"
 describe Datatrans::JSON::Transaction::Authorize do
   before do
     @successful_response = {
-      "transactionId" => "230208152517866296"
+      "transactionId" => "230223022302230223"
     }
 
     @failed_response = {
@@ -15,7 +15,7 @@ describe Datatrans::JSON::Transaction::Authorize do
 
     @valid_params = {
       currency: "CHF",
-      refno: "B4waw1UUM",
+      refno: "B4B4B4B4B",
       amount: 1337,
       payment_methods: ["ECA", "VIS"],
       success_url: "https://pay.sandbox.datatrans.com/upp/merchant/successPage.jsp",
@@ -39,7 +39,7 @@ describe Datatrans::JSON::Transaction::Authorize do
     it "generates correct request_body" do
       expected = {
         "currency": "CHF",
-        "refno": "B4waw1UUM",
+        "refno": "B4B4B4B4B",
         "amount": 1337,
         "autoSettle": true,
         "paymentMethods": ["ECA", "VIS"],

@@ -3,12 +3,12 @@ require "spec_helper"
 describe Datatrans::JSON::Transaction::Status do
   before do
     @successful_response = {
-      "transactionId" => "230208152524486347",
+      "transactionId" => "230223022302230223",
       "merchantId" => "1100000000",
       "type" => "payment",
       "status" => "settled",
       "currency" => "CHF",
-      "refno" => "nX0S1dytA",
+      "refno" => "B4B4B4B4B",
       "paymentMethod" => "VIS",
       "detail" => {
         "authorize" => {}
@@ -26,7 +26,7 @@ describe Datatrans::JSON::Transaction::Status do
           "source" => "api",
           "date" => "2023-02-08T14:25:24Z",
           "success" => true,
-          "ip" => "77.109.165.195"
+          "ip" => "8.8.8.8"
         }
       ]
     }
@@ -39,11 +39,11 @@ describe Datatrans::JSON::Transaction::Status do
     }
 
     @valid_params = {
-      transaction_id: '230208152524486347',
+      transaction_id: '230223022302230223',
     }
 
     @invalid_params = {
-      transaction_id: '0208152524486347',
+      transaction_id: '0208020802080208', # wrong number of digits in ID
     }
   end
 
@@ -55,7 +55,7 @@ describe Datatrans::JSON::Transaction::Status do
     it "#process handles a valid datatrans status response" do
       transaction = Datatrans::JSON::Transaction.new(@datatrans, @valid_params)
       expect(transaction.status).to be true
-      expect(transaction.response.params["refno"]).to eq "nX0S1dytA"
+      expect(transaction.response.params["refno"]).to eq "B4B4B4B4B"
       expect(transaction.response.params["paymentMethod"]).to eq "VIS"
     end
   end
