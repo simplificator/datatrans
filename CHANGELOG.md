@@ -5,6 +5,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+### Added
+
+* Add support for Datatrans JSON API
+
 ## 5.0.0 - 2022-09-21
 
 ### Changed

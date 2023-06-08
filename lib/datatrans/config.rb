@@ -39,7 +39,7 @@ module Datatrans
     end
 
     # Access a url, is automatically scoped to environment
-    def url(what)
+    def url(what, options = {})
       case what
       when :web_authorize_url
         subdomain = SUBDOMAINS[:payment_page]
@@ -53,6 +53,16 @@ module Datatrans
       when :xml_status_url
         subdomain = SUBDOMAINS[:server_to_server_api]
         path = '/upp/jsp/XML_status.jsp'
+      when :init_transaction
+        subdomain = SUBDOMAINS[:server_to_server_api]
+        path = "/v1/transactions"
+      when :start_json_transaction
+        subdomain = SUBDOMAINS[:payment_page]
+        path = "/v1/start/#{options[:transaction_id]}"
+      when :json_status_url
+        # https://api.sandbox.datatrans.com/v1/transactions/{transactionId}
+        subdomain = SUBDOMAINS[:server_to_server_api]
+        path = "/v1/transactions/#{options[:transaction_id]}"
       else
         raise "Unknown wanted action '#{what}'."
       end
@@ -66,6 +76,10 @@ module Datatrans
 
     def xml_transaction(*args)
       XML::Transaction.new(self, *args)
+    end
+
+    def json_transaction(*args)
+      JSON::Transaction.new(self, *args)
     end
   end
 end

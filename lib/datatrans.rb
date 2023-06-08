@@ -9,6 +9,7 @@ require 'datatrans/common'
 require 'datatrans/config'
 require 'datatrans/xml/transaction'
 require 'datatrans/web/transaction'
+require 'datatrans/json/transaction'
 
 begin
   require 'action_view'
