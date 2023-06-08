@@ -75,6 +75,11 @@ module Datatrans
     end
 
     def xml_transaction(*args)
+      message = <<-WARNING
+      [WARNING] Usage of XML API is deprecated by Datatrans. Consider moving to JSON API until June 3rd, 2024.
+      WARNING
+
+      Warning.warn(message)
       XML::Transaction.new(self, *args)
     end
 
