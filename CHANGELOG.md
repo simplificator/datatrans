@@ -5,10 +5,11 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
-## 5.1.0 - 2023-06-12
+## 5.1.0 - 2023-07-06
 
 ### Added
 
+* Test against Ruby 3.2 (@andyundso [#43](https://github.com/simplificator/datatrans/pull/43))
 * Add support for Datatrans JSON API (@TatianaPan [#45](https://github.com/simplificator/datatrans/pull/45)). Check Readme for details on how to use it.
 
 XML API is [deprecated](https://mailchi.mp/datatrans/basic-authdynamic-sign_reminder) by Datatrans and will not be supported by them after June 3rd, 2024. Consider to moving to a [new JSON API](https://api-reference.datatrans.ch/).
