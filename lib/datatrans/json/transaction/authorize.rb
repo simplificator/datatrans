@@ -25,11 +25,13 @@ class Datatrans::JSON::Transaction
     end
 
     def request_body
+      auto_settle = params[:auto_settle].nil? ? true : params[:auto_settle]
+
       {
         "currency": params[:currency],
         "refno": params[:refno],
         "amount": params[:amount],
-        "autoSettle": true,
+        "autoSettle": auto_settle,
         "paymentMethods": params[:payment_methods],
         "redirect": {
           "successUrl": params[:success_url],

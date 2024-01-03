@@ -139,7 +139,7 @@ Once you have a transaction id, you can start a transaction. Users of your appli
  render js: "window.location='#{path}'"
 ```
 
-You do not have to [settle a transaction](https://api-reference.datatrans.ch/#tag/v1transactions/operation/settle) by yourself: we set `"autoSettle": true` by default when authorizing a transaction, which means the transaction will be settled automatically.
+You do not have to [settle a transaction](https://api-reference.datatrans.ch/#tag/v1transactions/operation/settle) by yourself: we set `"autoSettle": true` by default when authorizing a transaction, which means the transaction will be settled automatically. This can be overridden by setting `auto_settle: false` when authorizing a transaction.
 
 Transaction status
 ------------------

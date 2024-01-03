@@ -23,6 +23,19 @@ describe Datatrans::JSON::Transaction::Authorize do
       error_url: "https://pay.sandbox.datatrans.com/upp/merchant/errorPage.jsp"
     }
 
+    @expected_request_body = {
+      "currency": "CHF",
+      "refno": "B4B4B4B4B",
+      "amount": 1337,
+      "autoSettle": true,
+      "paymentMethods": ["ECA", "VIS"],
+      "redirect": {
+        "successUrl": "https://pay.sandbox.datatrans.com/upp/merchant/successPage.jsp",
+        "cancelUrl": "https://pay.sandbox.datatrans.com/upp/merchant/cancelPage.jsp",
+        "errorUrl": "https://pay.sandbox.datatrans.com/upp/merchant/errorPage.jsp"
+      }
+    }
+
     @invalid_params = {
       currency: "CHF",
       refno: nil,
@@ -37,26 +50,24 @@ describe Datatrans::JSON::Transaction::Authorize do
     end
 
     it "generates correct request_body" do
-      expected = {
-        "currency": "CHF",
-        "refno": "B4B4B4B4B",
-        "amount": 1337,
-        "autoSettle": true,
-        "paymentMethods": ["ECA", "VIS"],
-        "redirect": {
-          "successUrl": "https://pay.sandbox.datatrans.com/upp/merchant/successPage.jsp",
-          "cancelUrl": "https://pay.sandbox.datatrans.com/upp/merchant/cancelPage.jsp",
-          "errorUrl": "https://pay.sandbox.datatrans.com/upp/merchant/errorPage.jsp"
-        }
-      }
       request = Datatrans::JSON::Transaction::Authorize.new(@datatrans, @valid_params)
 
-      expect(request.request_body).to eq(expected)
+      expect(request.request_body).to eq(@expected_request_body)
     end
 
     it "#process handles a valid datatrans authorize response" do
       @transaction = Datatrans::JSON::Transaction.new(@datatrans, @valid_params)
       expect(@transaction.authorize).to be true
+    end
+  end
+
+  context "with autoSettle specified" do
+    it "uses autoSettle=false in request_body" do
+      params_with_auto_settle = @valid_params.merge(auto_settle: false)
+      request = Datatrans::JSON::Transaction::Authorize.new(@datatrans, params_with_auto_settle)
+
+      expected_request_body_without_auto_settle = @expected_request_body.merge(autoSettle: false)
+      expect(request.request_body).to eq(expected_request_body_without_auto_settle)
     end
   end
 
