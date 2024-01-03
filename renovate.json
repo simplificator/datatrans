@@ -1,0 +1,14 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "github>simplificator/renovate-preset"
+  ],
+  "packageRules": [
+    {
+      "matchPackagePatterns": [
+        "ruby"
+      ],
+      "enabled": false
+    }
+  ]
+}
