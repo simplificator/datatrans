@@ -16,6 +16,12 @@ module Datatrans::JSON
       @response.successful?
     end
 
+    def merchant_authorize
+      self.request = MerchantAuthorize.new(self.datatrans, params)
+      @response = MerchantAuthorizeResponse.new(self.datatrans, request.process)
+      @response.successful?
+    end
+
     def status
       self.request = Status.new(self.datatrans, params)
       @response = StatusResponse.new(self.datatrans, request.process)
@@ -29,4 +35,5 @@ module Datatrans::JSON
 end
 
 require 'datatrans/json/transaction/authorize'
+require 'datatrans/json/transaction/merchant_authorize'
 require 'datatrans/json/transaction/status'
