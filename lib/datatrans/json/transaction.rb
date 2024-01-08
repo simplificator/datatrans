@@ -22,6 +22,12 @@ module Datatrans::JSON
       @response.successful?
     end
 
+    def settle
+      self.request = Settle.new(self.datatrans, params)
+      @response = SettleResponse.new(self.datatrans, request.process)
+      @response.successful?
+    end
+
     def transaction_path
       self.datatrans.url(:start_json_transaction, transaction_id: params[:transaction_id])
     end
@@ -30,3 +36,4 @@ end
 
 require 'datatrans/json/transaction/authorize'
 require 'datatrans/json/transaction/status'
+require 'datatrans/json/transaction/settle'
