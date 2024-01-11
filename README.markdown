@@ -98,7 +98,19 @@ JSON Transactions
 
 More information about Datatrans JSON API can be found [here](https://api-reference.datatrans.ch/). Our gem uses endpoints from `/v1/transactions` section. 
 
-We implemented support for [Redirect mode](https://docs.datatrans.ch/docs/redirect-lightbox) (since Lightbox mode may not work correctly on mobile, whereas Redirect works well on all devises).
+We implemented support for [Redirect mode](https://docs.datatrans.ch/docs/redirect-lightbox) (since Lightbox mode may not work correctly on mobile, whereas Redirect works well on all devices).
+
+Saving Payment Information
+--------------------------
+
+According to the [docs](https://docs.datatrans.ch/docs/customer-initiated-payments#saving-payment-information), there are three possible flows:
+
+- **Customer Initiated Payments**: _Your customer pays and nothing is registered._
+  - This is the most basic setup and does _not_ save any payment information: First, call `transaction.authorize`, and then redirect the user to the `transaction_path` (see the sections `Authorize` and `Start a transaction` below).
+- **Customer Initiated Payment** and creating an `alias` for subsequent **Merchant Initiated Payments**: _Your customer pays and the card or payment method information is registered. You receive an alias which you save for later merchant initiated payments or one-click checkouts._
+  - In order to save payment information after your customer has finalized their payment, without them having to re-enter their payment information and go through the 3D-Secure flow, pass `option: {"createAlias": true}`. More information can be found [here](https://docs.datatrans.ch/docs/redirect-lightbox#saving-payment-information).
+- **Merchant Initiated Payments**: _Your customer registers their card or payment method information without any payment. Their account is not charged. This is what we call a dedicated registration._
+  - This setup allows you to save a customers payment information without any charge in the beginning. This is useful in the context of setting up a subscription model (e.g., usage-based billing at the end of a billing period). See the section `Merchant Initiated Payments` below.
 
 Authorize
 ---------
