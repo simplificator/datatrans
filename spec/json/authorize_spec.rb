@@ -71,6 +71,16 @@ describe Datatrans::JSON::Transaction::Authorize do
     end
   end
 
+  context "with option specified" do
+    it "uses option in request_body" do
+      params_with_option = @valid_params.merge(option: {"createAlias": true})
+      request = Datatrans::JSON::Transaction::Authorize.new(@datatrans, params_with_option)
+
+      expected_request_body_with_option = @expected_request_body.merge("option" => {"createAlias": true})
+      expect(request.request_body).to eq(expected_request_body_with_option)
+    end
+  end
+
   context "failed response" do
     before do
       allow_any_instance_of(Datatrans::JSON::Transaction::Authorize).to receive(:process).and_return(@failed_response)
