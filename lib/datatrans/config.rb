@@ -56,6 +56,9 @@ module Datatrans
       when :init_transaction
         subdomain = SUBDOMAINS[:server_to_server_api]
         path = "/v1/transactions"
+      when :authorize_transaction
+        subdomain = SUBDOMAINS[:server_to_server_api]
+        path = "/v1/transactions/authorize"
       when :start_json_transaction
         subdomain = SUBDOMAINS[:payment_page]
         path = "/v1/start/#{options[:transaction_id]}"

@@ -208,6 +208,51 @@ You can check the trasaction [status](https://api-reference.datatrans.ch/#tag/v1
   end
 ```
 
+Merchant Initiated Payments
+---------
+
+It's possible to authorize transactions without user interaction, via [merchant initiated payments](https://docs.datatrans.ch/docs/merchant-initiated-payments).
+
+To perform a so-called "dedicated registration" (so we can later charge the card via its `alias`), you should follow the same steps as described above, but not provide an amount:
+
+```ruby
+transaction = datatrans.json_transaction(
+  refno: 'ABCDEF',
+  amount: 0, # omit amount for dedicated registrations
+  currency: "CHF",
+  payment_methods: ["ECA", "VIS"],
+  success_url: <your_application_return_url>,
+  cancel_url: <your_application_return_url>,
+  error_url: <your_application_return_url>
+)
+
+init = transaction.authorize
+
+# successful authorization call returns in response a transaction id
+if init
+  transaction_id = transaction.response.params["transactionId"]
+end
+```
+
+Then, at a later point in time, and without needing any user interaction, you can create a payment via `merchant_authorize`:
+
+```ruby
+dedicated_registration = datatrans.json_transaction(transaction_id: transaction_id)
+dedicated_registration.status # this will contain the card information
+
+card_alias = dedicated_registration.response.params["card"]["alias"]
+card_expiry_month = dedicated_registration.response.params["card"]["expiryMonth"]
+card_expiry_year = dedicated_registration.response.params["card"]["expiryYear"]
+
+transaction = datatrans.json_transaction(
+  refno: "ABCDEF",
+  amount: 1000,
+  currency: "CHF",
+  card: {alias: card_alias, expiryMonth: card_expiry_month, expiryYear: card_expiry_year}
+)
+
+transaction.merchant_authorize # this will charge the card without user interaction
+```
 
 XML Transactions
 ================
