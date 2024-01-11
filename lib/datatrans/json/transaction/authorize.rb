@@ -27,7 +27,7 @@ class Datatrans::JSON::Transaction
     def request_body
       auto_settle = params[:auto_settle].nil? ? true : params[:auto_settle]
 
-      {
+      body = {
         "currency": params[:currency],
         "refno": params[:refno],
         "amount": params[:amount],
@@ -39,6 +39,10 @@ class Datatrans::JSON::Transaction
           "errorUrl": params[:error_url]
         }
       }
+
+      body["option"] = params[:option] if params[:option].present?
+
+      body
     end
   end
 
