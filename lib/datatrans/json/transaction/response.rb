@@ -8,15 +8,19 @@ class Datatrans::JSON::Transaction
     end
 
     def successful?
-      raise 'overwrite in subclass!'
+      raise "overwrite in subclass!"
     end
 
     def error_code
-      params["error"]["code"] rescue nil
+      params["error"]["code"]
+    rescue
+      nil
     end
 
     def error_message
-      params["error"]["message"] rescue nil
+      params["error"]["message"]
+    rescue
+      nil
     end
   end
 end

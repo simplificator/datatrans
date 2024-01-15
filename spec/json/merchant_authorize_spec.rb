@@ -30,15 +30,15 @@ describe Datatrans::JSON::Transaction::MerchantAuthorize do
     }
 
     @expected_request_body = {
-      "currency": "CHF",
-      "refno": "B4B4B4B4B",
-      "amount": 1000,
-      "card": {
-        "alias": "AAABcH0Bq92s3kgAESIAAbGj5NIsAHWC",
-        "expiryMonth": "01",
-        "expiryYear": "23"
+      currency: "CHF",
+      refno: "B4B4B4B4B",
+      amount: 1000,
+      card: {
+        alias: "AAABcH0Bq92s3kgAESIAAbGj5NIsAHWC",
+        expiryMonth: "01",
+        expiryYear: "23"
       },
-      "autoSettle": true
+      autoSettle: true
     }
 
     @invalid_params = {

@@ -10,7 +10,7 @@ module Datatrans::Web
         hidden_field_tag(:useAlias, transaction.params[:useAlias]),
         hidden_field_tag(:sign, transaction.signature),
         hidden_field_tag(:refno, transaction.params[:refno]),
-        hidden_field_tag(:uppCustomerDetails, transaction.params[:uppCustomerDetails]),
+        hidden_field_tag(:uppCustomerDetails, transaction.params[:uppCustomerDetails])
       ]
 
       [:uppCustomerName, :uppCustomerEmail].each do |field_name|

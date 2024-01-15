@@ -1,10 +1,10 @@
-require 'openssl'
+require "openssl"
 
 module Datatrans::Common
   def sign(*fields)
-    return nil unless self.datatrans.sign_key
-    key = self.datatrans.sign_key.split(/([a-f0-9][a-f0-9])/).reject(&:empty?)
+    return nil unless datatrans.sign_key
+    key = datatrans.sign_key.split(/([a-f0-9][a-f0-9])/).reject(&:empty?)
     key = key.pack("H*" * key.size)
-    OpenSSL::HMAC.hexdigest(OpenSSL::Digest::MD5.new, key, fields.join)
+    OpenSSL::HMAC.hexdigest(OpenSSL::Digest.new("MD5"), key, fields.join)
   end
 end

@@ -1,5 +1,5 @@
-require 'httparty'
-require 'datatrans/json/transaction/response'
+require "httparty"
+require "datatrans/json/transaction/response"
 
 class Datatrans::JSON::Transaction
   class Status
@@ -13,14 +13,14 @@ class Datatrans::JSON::Transaction
 
     def get(url, options = {})
       options = options
-        .merge(self.datatrans.proxy)
-        .merge(:basic_auth => { :username => self.datatrans.merchant_id, :password => self.datatrans.password })
+        .merge(datatrans.proxy)
+        .merge(basic_auth: {username: datatrans.merchant_id, password: datatrans.password})
       HTTParty.get(url, **options)
     end
 
     def process
-      get(self.datatrans.url(:json_status_url, transaction_id: params[:transaction_id]),
-        :headers => { 'Content-Type' => 'application/json' }).parsed_response
+      get(datatrans.url(:json_status_url, transaction_id: params[:transaction_id]),
+        headers: {"Content-Type" => "application/json"}).parsed_response
     end
   end
 
@@ -30,15 +30,21 @@ class Datatrans::JSON::Transaction
     end
 
     def response_code
-      params["status"] rescue nil
+      params["status"]
+    rescue
+      nil
     end
 
     def reference_number
-      params["refno"] rescue nil
+      params["refno"]
+    rescue
+      nil
     end
 
     def amount
-      params["detail"]["settle"]["amount"] rescue nil
+      params["detail"]["settle"]["amount"]
+    rescue
+      nil
     end
   end
 end

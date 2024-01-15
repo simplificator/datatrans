@@ -1,4 +1,4 @@
-require 'spec_helper'
+require "spec_helper"
 
 describe Datatrans::XML::Transaction::VoidRequest do
   before do
@@ -54,10 +54,10 @@ describe Datatrans::XML::Transaction::VoidRequest do
     }
 
     @valid_params = {
-      :refno => 'ABCDEF',
-      :amount => 1000,
-      :currency => 'CHF',
-      :transaction_id => '110808143302868124'
+      refno: "ABCDEF",
+      amount: 1000,
+      currency: "CHF",
+      transaction_id: "110808143302868124"
     }
   end
 

@@ -6,10 +6,10 @@ module Datatrans
     DEFAULT_SIGN_KEY = false
 
     SUBDOMAINS = {
-      payment_page: 'pay',
-      server_to_server_api: 'api'
+      payment_page: "pay",
+      server_to_server_api: "api"
     }
-    DOMAIN = 'datatrans.com'
+    DOMAIN = "datatrans.com"
 
     attr_reader :environment, :merchant_id, :sign_key, :password, :proxy
 
@@ -21,10 +21,10 @@ module Datatrans
     # * :proxy (a hash containing :http_proxyaddr, :http_proxyport, :http_proxyuser, :http_proxypass)
     def initialize(options = {})
       @merchant_id = options[:merchant_id]
-      raise ArgumentError.new(":merchant_id is required") unless self.merchant_id
+      raise ArgumentError.new(":merchant_id is required") unless merchant_id
       self.environment = options[:environment] || DEFAULT_ENVIRONMENT
       @password = options[:password]
-      raise ArgumentError.new(":password is required") unless self.password
+      raise ArgumentError.new(":password is required") unless password
       @sign_key = options[:sign_key] || DEFAULT_SIGN_KEY
       @proxy = options[:proxy] || {}
     end
@@ -34,7 +34,7 @@ module Datatrans
       if ENVIRONMENTS.include?(environment)
         @environment = environment
       else
-        raise "Unknown environment '#{environment}'. Available: #{ENVIRONMENTS.join(', ')}"
+        raise "Unknown environment '#{environment}'. Available: #{ENVIRONMENTS.join(", ")}"
       end
     end
 
@@ -43,16 +43,16 @@ module Datatrans
       case what
       when :web_authorize_url
         subdomain = SUBDOMAINS[:payment_page]
-        path = '/upp/jsp/upStart.jsp'
+        path = "/upp/jsp/upStart.jsp"
       when :xml_authorize_url
         subdomain = SUBDOMAINS[:server_to_server_api]
-        path = '/upp/jsp/XML_authorize.jsp'
+        path = "/upp/jsp/XML_authorize.jsp"
       when :xml_settlement_url
         subdomain = SUBDOMAINS[:server_to_server_api]
-        path = '/upp/jsp/XML_processor.jsp'
+        path = "/upp/jsp/XML_processor.jsp"
       when :xml_status_url
         subdomain = SUBDOMAINS[:server_to_server_api]
-        path = '/upp/jsp/XML_status.jsp'
+        path = "/upp/jsp/XML_status.jsp"
       when :init_transaction
         subdomain = SUBDOMAINS[:server_to_server_api]
         path = "/v1/transactions"
@@ -73,7 +73,7 @@ module Datatrans
       else
         raise "Unknown wanted action '#{what}'."
       end
-      subdomain += '.sandbox' unless self.environment == :production
+      subdomain += ".sandbox" unless environment == :production
       "https://#{subdomain}.#{DOMAIN}#{path}"
     end
 

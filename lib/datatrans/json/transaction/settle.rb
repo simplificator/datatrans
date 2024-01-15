@@ -1,5 +1,5 @@
-require 'httparty'
-require 'datatrans/json/transaction/response'
+require "httparty"
+require "datatrans/json/transaction/response"
 
 class Datatrans::JSON::Transaction
   class Settle
@@ -13,22 +13,22 @@ class Datatrans::JSON::Transaction
 
     def post(url, options = {})
       options = options
-        .merge(self.datatrans.proxy)
-        .merge(:basic_auth => { :username => self.datatrans.merchant_id, :password => self.datatrans.password })
+        .merge(datatrans.proxy)
+        .merge(basic_auth: {username: datatrans.merchant_id, password: datatrans.password})
       HTTParty.post(url, **options)
     end
 
     def process
-      post(self.datatrans.url(:json_settle_url, transaction_id: params[:transaction_id]),
-        :headers => { 'Content-Type' => 'application/json' },
-        :body => request_body.to_json).parsed_response
+      post(datatrans.url(:json_settle_url, transaction_id: params[:transaction_id]),
+        headers: {"Content-Type" => "application/json"},
+        body: request_body.to_json).parsed_response
     end
 
     def request_body
       {
-        "currency": params[:currency],
-        "amount": params[:amount],
-        "refno": params[:refno]
+        currency: params[:currency],
+        amount: params[:amount],
+        refno: params[:refno]
       }
     end
   end

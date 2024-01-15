@@ -1,9 +1,9 @@
-require 'spec_helper'
+require "spec_helper"
 
 describe Datatrans::Config do
   describe "Instance Methods" do
     before do
-      @datatrans = Datatrans::Config.new(:merchant_id => "xxx", :password => "yyy")
+      @datatrans = Datatrans::Config.new(merchant_id: "xxx", password: "yyy")
     end
 
     describe "web_transaction" do

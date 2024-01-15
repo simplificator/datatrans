@@ -24,15 +24,15 @@ describe Datatrans::JSON::Transaction::Authorize do
     }
 
     @expected_request_body = {
-      "currency": "CHF",
-      "refno": "B4B4B4B4B",
-      "amount": 1337,
-      "autoSettle": true,
-      "paymentMethods": ["ECA", "VIS"],
-      "redirect": {
-        "successUrl": "https://pay.sandbox.datatrans.com/upp/merchant/successPage.jsp",
-        "cancelUrl": "https://pay.sandbox.datatrans.com/upp/merchant/cancelPage.jsp",
-        "errorUrl": "https://pay.sandbox.datatrans.com/upp/merchant/errorPage.jsp"
+      currency: "CHF",
+      refno: "B4B4B4B4B",
+      amount: 1337,
+      autoSettle: true,
+      paymentMethods: ["ECA", "VIS"],
+      redirect: {
+        successUrl: "https://pay.sandbox.datatrans.com/upp/merchant/successPage.jsp",
+        cancelUrl: "https://pay.sandbox.datatrans.com/upp/merchant/cancelPage.jsp",
+        errorUrl: "https://pay.sandbox.datatrans.com/upp/merchant/errorPage.jsp"
       }
     }
 
@@ -40,7 +40,7 @@ describe Datatrans::JSON::Transaction::Authorize do
       currency: "CHF",
       refno: nil,
       amount: 1337,
-      payment_methods: ["ECA", "VIS"],
+      payment_methods: ["ECA", "VIS"]
     }
   end
 
@@ -73,10 +73,10 @@ describe Datatrans::JSON::Transaction::Authorize do
 
   context "with option specified" do
     it "uses option in request_body" do
-      params_with_option = @valid_params.merge(option: {"createAlias": true})
+      params_with_option = @valid_params.merge(option: {createAlias: true})
       request = Datatrans::JSON::Transaction::Authorize.new(@datatrans, params_with_option)
 
-      expected_request_body_with_option = @expected_request_body.merge("option" => {"createAlias": true})
+      expected_request_body_with_option = @expected_request_body.merge("option" => {createAlias: true})
       expect(request.request_body).to eq(expected_request_body_with_option)
     end
   end

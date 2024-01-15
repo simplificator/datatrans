@@ -13,7 +13,7 @@ describe Datatrans::JSON::Transaction::Settle do
     }
 
     @valid_params_settle = {
-      transaction_id: '230223022302230223',
+      transaction_id: "230223022302230223",
       amount: 1337,
       currency: "CHF",
       refno: "B4B4B4B4B"
