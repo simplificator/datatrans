@@ -36,6 +36,10 @@ module Datatrans::XML
 
     # TODO: purchase, credit methods
 
+    def respond_to_missing?(method, *)
+      response.respond_to?(method.to_sym) || request.respond_to?(method.to_sym) || super
+    end
+
     def method_missing(method, *args, &block)
       if response.respond_to? method.to_sym
         response.send(method)

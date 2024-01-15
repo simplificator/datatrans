@@ -24,6 +24,10 @@ module Datatrans::Web
       @response.successful?
     end
 
+    def respond_to_missing?(method, *)
+      response.respond_to?(method.to_sym) || super
+    end
+
     def method_missing(method, *args, &block)
       if response.respond_to? method.to_sym
         response.send(method)

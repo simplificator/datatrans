@@ -85,12 +85,6 @@ class Datatrans::XML::Transaction
       nil
     end
 
-    def authorization_code
-      params_root_node["response"]["authorizationCode"]
-    rescue
-      nil
-    end
-
     def payment_method
       params_root_node["response"]["pmethod"]
     rescue
