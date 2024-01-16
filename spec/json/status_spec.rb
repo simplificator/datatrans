@@ -39,11 +39,11 @@ describe Datatrans::JSON::Transaction::Status do
     }
 
     @valid_params = {
-      transaction_id: '230223022302230223',
+      transaction_id: "230223022302230223"
     }
 
     @invalid_params = {
-      transaction_id: '0208020802080208', # wrong number of digits in ID
+      transaction_id: "0208020802080208" # wrong number of digits in ID
     }
   end
 

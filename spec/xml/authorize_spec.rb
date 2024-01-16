@@ -1,4 +1,4 @@
-require 'spec_helper'
+require "spec_helper"
 
 describe Datatrans::XML::Transaction::AuthorizeRequest do
   before do
@@ -63,12 +63,12 @@ describe Datatrans::XML::Transaction::AuthorizeRequest do
     }
 
     @valid_params = {
-      :refno => 'ABCDEF',
-      :amount => 1000,
-      :currency => 'CHF',
-      :aliasCC => '3784982984234',
-      :expm => 12,
-      :expy => 15
+      refno: "ABCDEF",
+      amount: 1000,
+      currency: "CHF",
+      aliasCC: "3784982984234",
+      expm: 12,
+      expy: 15
     }
   end
 

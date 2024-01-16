@@ -1,12 +1,12 @@
-require 'datatrans/xml/transaction/request'
-require 'datatrans/xml/transaction/response'
+require "datatrans/xml/transaction/request"
+require "datatrans/xml/transaction/response"
 
 class Datatrans::XML::Transaction
   class CaptureRequest < Request
     def process
-      post(self.datatrans.url(:xml_settlement_url),
-        :headers => { 'Content-Type' => 'text/xml' },
-        :body => build_capture_request.to_s).parsed_response
+      post(datatrans.url(:xml_settlement_url),
+        headers: {"Content-Type" => "text/xml"},
+        body: build_capture_request.to_s).parsed_response
     end
 
     private
@@ -22,41 +22,55 @@ class Datatrans::XML::Transaction
 
   class CaptureResponse < Response
     def successful?
-      response_code == '01' && response_message == 'settlement succeeded'
+      response_code == "01" && response_message == "settlement succeeded"
     end
 
     def response_code
-      params_root_node['response']['responseCode'] rescue nil
+      params_root_node["response"]["responseCode"]
+    rescue
+      nil
     end
 
     def response_message
-      params_root_node['response']['responseMessage'] rescue nil
+      params_root_node["response"]["responseMessage"]
+    rescue
+      nil
     end
 
     def transaction_id
-      params_root_node['request']['uppTransactionId'] rescue nil
+      params_root_node["request"]["uppTransactionId"]
+    rescue
+      nil
     end
 
     def reference_number
-      params_root_node['refno'] rescue nil
+      params_root_node["refno"]
+    rescue
+      nil
     end
 
     def error_code
-      params_root_node['error']['errorCode'] rescue nil
+      params_root_node["error"]["errorCode"]
+    rescue
+      nil
     end
 
     def error_message
-      params_root_node['error']['errorMessage'] rescue nil
+      params_root_node["error"]["errorMessage"]
+    rescue
+      nil
     end
 
     def error_detail
-      params_root_node['error']['errorDetail'] rescue nil
+      params_root_node["error"]["errorDetail"]
+    rescue
+      nil
     end
 
     private
 
     def params_root_node
-      params['paymentService']['body']['transaction']
+      params["paymentService"]["body"]["transaction"]
     end
   end
 end

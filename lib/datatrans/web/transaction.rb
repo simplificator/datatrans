@@ -1,4 +1,4 @@
-require 'active_support/core_ext/hash'
+require "active_support/core_ext/hash"
 
 module Datatrans::Web
   class Transaction
@@ -11,17 +11,21 @@ module Datatrans::Web
       @datatrans = datatrans
       params = params.to_hash
       params.symbolize_keys!
-      params.reverse_merge!(:reqtype => 'NOA', :useAlias => 'yes', :hiddenMode => 'yes')
+      params.reverse_merge!(reqtype: "NOA", useAlias: "yes", hiddenMode: "yes")
       @params = params
     end
 
     def signature
-      sign(self.datatrans.merchant_id, params[:amount], params[:currency], params[:refno])
+      sign(datatrans.merchant_id, params[:amount], params[:currency], params[:refno])
     end
 
     def authorize
       @response = AuthorizeResponse.new(datatrans, params)
       @response.successful?
+    end
+
+    def respond_to_missing?(method, *)
+      response.respond_to?(method.to_sym) || super
     end
 
     def method_missing(method, *args, &block)
@@ -34,4 +38,4 @@ module Datatrans::Web
   end
 end
 
-require 'datatrans/web/transaction/authorize'
+require "datatrans/web/transaction/authorize"

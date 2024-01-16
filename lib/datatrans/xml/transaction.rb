@@ -1,4 +1,4 @@
-require 'active_support/core_ext/hash'
+require "active_support/core_ext/hash"
 
 module Datatrans::XML
   class Transaction
@@ -11,31 +11,34 @@ module Datatrans::XML
     end
 
     def authorize
-      self.request = AuthorizeRequest.new(self.datatrans, params)
-      @response = AuthorizeResponse.new(self.datatrans, request.process)
+      self.request = AuthorizeRequest.new(datatrans, params)
+      @response = AuthorizeResponse.new(datatrans, request.process)
       @response.successful?
     end
 
     def void
-      self.request = VoidRequest.new(self.datatrans, params)
-      @response = VoidResponse.new(self.datatrans, request.process)
+      self.request = VoidRequest.new(datatrans, params)
+      @response = VoidResponse.new(datatrans, request.process)
       @response.successful?
     end
 
     def capture
-      self.request = CaptureRequest.new(self.datatrans, params)
-      @response = CaptureResponse.new(self.datatrans, request.process)
+      self.request = CaptureRequest.new(datatrans, params)
+      @response = CaptureResponse.new(datatrans, request.process)
       @response.successful?
     end
 
     def status
-      self.request = StatusRequest.new(self.datatrans, params)
-      @response = StatusResponse.new(self.datatrans, request.process)
+      self.request = StatusRequest.new(datatrans, params)
+      @response = StatusResponse.new(datatrans, request.process)
       @response.successful?
     end
 
     # TODO: purchase, credit methods
 
+    def respond_to_missing?(method, *)
+      response.respond_to?(method.to_sym) || request.respond_to?(method.to_sym) || super
+    end
 
     def method_missing(method, *args, &block)
       if response.respond_to? method.to_sym
@@ -49,8 +52,7 @@ module Datatrans::XML
   end
 end
 
-require 'datatrans/xml/transaction/authorize'
-require 'datatrans/xml/transaction/void'
-require 'datatrans/xml/transaction/capture'
-require 'datatrans/xml/transaction/status'
-
+require "datatrans/xml/transaction/authorize"
+require "datatrans/xml/transaction/void"
+require "datatrans/xml/transaction/capture"
+require "datatrans/xml/transaction/status"

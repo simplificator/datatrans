@@ -8,7 +8,7 @@ class Datatrans::XML::Transaction
     end
 
     def successful?
-      raise 'overwrite in subclass!'
+      raise "overwrite in subclass!"
     end
   end
 end

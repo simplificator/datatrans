@@ -1,4 +1,4 @@
-require 'spec_helper'
+require "spec_helper"
 
 describe Datatrans::XML::Transaction::StatusRequest do
   before do
@@ -17,7 +17,7 @@ describe Datatrans::XML::Transaction::StatusRequest do
               "amount" => "500",
               "currency" => "CHF",
               "authorizationCode" => "891104057",
-              "pmethod" => "ECA",
+              "pmethod" => "ECA"
             },
             "trxStatus" => "response"
           },
@@ -43,7 +43,7 @@ describe Datatrans::XML::Transaction::StatusRequest do
               "amount" => "",
               "currency" => "",
               "authorizationCode" => "",
-              "pmethod" => "",
+              "pmethod" => ""
             },
             "trxStatus" => "response"
           },
@@ -55,7 +55,7 @@ describe Datatrans::XML::Transaction::StatusRequest do
     }
 
     @valid_params = {
-      :transaction_id => '111013090000394044',
+      transaction_id: "111013090000394044"
     }
   end
 
