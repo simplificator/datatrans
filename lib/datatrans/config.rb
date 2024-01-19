@@ -43,15 +43,22 @@ module Datatrans
       case what
       when :web_authorize_url
         warn "DEPRECATION WARNING: Support for the payment page is deprecated and will be removed in the next major version. Please use the JSON API instead."
+
         subdomain = SUBDOMAINS[:payment_page]
         path = "/upp/jsp/upStart.jsp"
       when :xml_authorize_url
+        warn "DEPRECATION WARNING: Support for the XML API is deprecated and will be removed in the next major version. Please use the JSON API instead."
+
         subdomain = SUBDOMAINS[:server_to_server_api]
         path = "/upp/jsp/XML_authorize.jsp"
       when :xml_settlement_url
+        warn "DEPRECATION WARNING: Support for the XML API is deprecated and will be removed in the next major version. Please use the JSON API instead."
+
         subdomain = SUBDOMAINS[:server_to_server_api]
         path = "/upp/jsp/XML_processor.jsp"
       when :xml_status_url
+        warn "DEPRECATION WARNING: Support for the XML API is deprecated and will be removed in the next major version. Please use the JSON API instead."
+
         subdomain = SUBDOMAINS[:server_to_server_api]
         path = "/upp/jsp/XML_status.jsp"
       when :init_transaction

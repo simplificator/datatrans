@@ -261,7 +261,9 @@ transaction.merchant_authorize # this will charge the card without user interact
 XML Transactions
 ================
 
-XML API is [deprecated](https://mailchi.mp/datatrans/basic-authdynamic-sign_reminder) by Datatrans. After June 3rd, 2024 all merchants will have to use JSON API.
+> [!IMPORTANT]
+>
+> Datatrans will stop supporting the XML API on June 3rd, 2024. The support in this gem will be removed in the next major release. Please use the [JSON API](#json-transactions) instead.
 
 If you have already a credit card alias or an authorized transaction you can
 use the convenient XML methods to process payments.
