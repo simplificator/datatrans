@@ -42,6 +42,7 @@ module Datatrans
     def url(what, options = {})
       case what
       when :web_authorize_url
+        warn "DEPRECATION WARNING: Support for the payment page is deprecated and will be removed in the next major version. Please use the JSON API instead."
         subdomain = SUBDOMAINS[:payment_page]
         path = "/upp/jsp/upStart.jsp"
       when :xml_authorize_url

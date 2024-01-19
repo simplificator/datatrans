@@ -3,6 +3,8 @@ class Datatrans::Web::Transaction
     attr_accessor :params, :datatrans
 
     def initialize(datatrans, params)
+      warn "DEPRECATION WARNING: Support for the payment page is deprecated and will be removed in the next major version. Please use the JSON API instead."
+
       @datatrans = datatrans
       @params = params
     end

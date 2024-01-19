@@ -1,6 +1,8 @@
 module Datatrans::Web
   module ViewHelper
     def datatrans_notification_request_hidden_fields(datatrans, transaction)
+      warn "DEPRECATION WARNING: Support for the payment page is deprecated and will be removed in the next major version. Please use the JSON API instead."
+
       fields = [
         hidden_field_tag(:merchantId, datatrans.merchant_id),
         hidden_field_tag(:hiddenMode, transaction.params[:hiddenMode]),

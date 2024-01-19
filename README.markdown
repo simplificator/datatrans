@@ -31,6 +31,10 @@ Possible values for the environment: `:production`, `:development`
 Web Authorization
 =================
 
+> [!IMPORTANT]
+>
+> Datatrans no longer supports the Payment Page API. The support in this gem will be removed in the next major release. Please use the [JSON API](#json-transactions) instead.
+
 If you want to process a credit card the first time a web authorization is
 necessary. Add the following code to a controller action that shows the form.
 You need to pass at least `amount`, `currency` and `refno` (order number).

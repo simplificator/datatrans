@@ -8,6 +8,8 @@ module Datatrans::Web
     attr_reader :response, :params, :datatrans
 
     def initialize(datatrans, params)
+      warn "DEPRECATION WARNING: Support for the payment page is deprecated and will be removed in the next major version. Please use the JSON API instead."
+
       @datatrans = datatrans
       params = params.to_hash
       params.symbolize_keys!
