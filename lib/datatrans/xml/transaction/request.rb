@@ -13,6 +13,8 @@ class Datatrans::XML::Transaction
     end
 
     def initialize(datatrans, params)
+      warn "DEPRECATION WARNING: Support for the XML API is deprecated and will be removed in the next major version. Please use the JSON API instead."
+
       @datatrans = datatrans
       @params = params
     end

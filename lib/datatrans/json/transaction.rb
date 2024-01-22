@@ -11,8 +11,16 @@ module Datatrans::JSON
     end
 
     def authorize
+      warn "[DEPRECATION] `Datatrans::JSON::Transaction#authorize` is deprecated.  Please use `Datatrans::JSON::Transaction#init` instead."
+
       self.request = Authorize.new(datatrans, params)
       @response = AuthorizeResponse.new(datatrans, request.process)
+      @response.successful?
+    end
+
+    def init
+      self.request = Init.new(datatrans, params)
+      @response = InitResponse.new(datatrans, request.process)
       @response.successful?
     end
 

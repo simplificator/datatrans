@@ -31,6 +31,10 @@ Possible values for the environment: `:production`, `:development`
 Web Authorization
 =================
 
+> [!IMPORTANT]
+>
+> Datatrans no longer supports the Payment Page API. The support in this gem will be removed in the next major release. Please use the [JSON API](#json-transactions) instead.
+
 If you want to process a credit card the first time a web authorization is
 necessary. Add the following code to a controller action that shows the form.
 You need to pass at least `amount`, `currency` and `refno` (order number).
@@ -106,16 +110,16 @@ Saving Payment Information
 According to the [docs](https://docs.datatrans.ch/docs/customer-initiated-payments#saving-payment-information), there are three possible flows:
 
 - **Customer Initiated Payments**: _Your customer pays and nothing is registered._
-  - This is the most basic setup and does _not_ save any payment information: First, call `transaction.authorize`, and then redirect the user to the `transaction_path` (see the sections `Authorize` and `Start a transaction` below).
+  - This is the most basic setup and does _not_ save any payment information: First, call `transaction.init`, and then redirect the user to the `transaction_path` (see the sections `Initialize` and `Start a transaction` below).
 - **Customer Initiated Payment** and creating an `alias` for subsequent **Merchant Initiated Payments**: _Your customer pays and the card or payment method information is registered. You receive an alias which you save for later merchant initiated payments or one-click checkouts._
   - In order to save payment information after your customer has finalized their payment, without them having to re-enter their payment information and go through the 3D-Secure flow, pass `option: {"createAlias": true}`. More information can be found [here](https://docs.datatrans.ch/docs/redirect-lightbox#saving-payment-information).
 - **Merchant Initiated Payments**: _Your customer registers their card or payment method information without any payment. Their account is not charged. This is what we call a dedicated registration._
   - This setup allows you to save a customers payment information without any charge in the beginning. This is useful in the context of setting up a subscription model (e.g., usage-based billing at the end of a billing period). See the section `Merchant Initiated Payments` below.
 
-Authorize
+Initialize
 ---------
 
-Authorize JSON transaction:
+Initialize a JSON transaction:
 
 ```ruby
 transaction = datatrans.json_transaction(
@@ -128,9 +132,9 @@ transaction = datatrans.json_transaction(
   error_url: <your_application_return_url>
 )
 
-# call to init endpoint to initialize a transaction
+# call to initialize endpoint to initialize a transaction
 # returns true or false depending if response was successful or not
-init = transaction.authorize
+init = transaction.init
 
 # successful authorization call returns in response a transaction id
 if init
@@ -226,7 +230,7 @@ transaction = datatrans.json_transaction(
   error_url: <your_application_return_url>
 )
 
-init = transaction.authorize
+init = transaction.init
 
 # successful authorization call returns in response a transaction id
 if init
@@ -257,7 +261,9 @@ transaction.merchant_authorize # this will charge the card without user interact
 XML Transactions
 ================
 
-XML API is [deprecated](https://mailchi.mp/datatrans/basic-authdynamic-sign_reminder) by Datatrans. After June 3rd, 2024 all merchants will have to use JSON API.
+> [!IMPORTANT]
+>
+> Datatrans will stop supporting the XML API on June 3rd, 2024. The support in this gem will be removed in the next major release. Please use the [JSON API](#json-transactions) instead.
 
 If you have already a credit card alias or an authorized transaction you can
 use the convenient XML methods to process payments.
