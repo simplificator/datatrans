@@ -5,6 +5,19 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## 5.2.0 - 2024-01-31
+
+### Added
+
+* Support for Ruby 3.3 and Rails 7.1 (@andyundso [#47](https://github.com/simplificator/datatrans/pull/47))
+* Support for Merchant Initiated Payments (@visini [#48](https://github.com/simplificator/datatrans/pull/48), [#52](https://github.com/simplificator/datatrans/pull/52), [#53](https://github.com/simplificator/datatrans/pull/53), [#56](https://github.com/simplificator/datatrans/pull/56))
+
+### Changed
+
+* Reformatted code with standardrb (@andyundso [#57](https://github.com/simplificator/datatrans/pull/57))
+* Marked XML APIs and Web APIs as deprecated (@andyundso [#60](https://github.com/simplificator/datatrans/pull/60))
+* Renamed `Datatrans::JSON::Transaction::Authorize` to `Datatrans::JSON::Transaction::Init`. `::Authorize` will still work until the next major release (@andyundso [#60](https://github.com/simplificator/datatrans/pull/60))
+
 ## 5.1.0 - 2023-07-06
 
 ### Added
