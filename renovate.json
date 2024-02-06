@@ -9,6 +9,12 @@
         "ruby"
       ],
       "enabled": false
+    },
+    {
+      "matchPackageNames": [
+        "bundler"
+      ],
+      "allowedVersions": "<2.5"
     }
   ]
 }
