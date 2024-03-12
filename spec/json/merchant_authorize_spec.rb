@@ -29,6 +29,16 @@ describe Datatrans::JSON::Transaction::MerchantAuthorize do
       auto_settle: true
     }
 
+    @valid_params_twint = {
+      currency: "CHF",
+      refno: "B4B4B4B4B",
+      amount: 1000,
+      TWI: {
+        alias: "123456"
+      },
+      auto_settle: true
+    }
+
     @expected_request_body = {
       currency: "CHF",
       refno: "B4B4B4B4B",
@@ -37,6 +47,16 @@ describe Datatrans::JSON::Transaction::MerchantAuthorize do
         alias: "AAABcH0Bq92s3kgAESIAAbGj5NIsAHWC",
         expiryMonth: "01",
         expiryYear: "23"
+      },
+      autoSettle: true
+    }
+
+    @expected_request_body_twint = {
+      currency: "CHF",
+      refno: "B4B4B4B4B",
+      amount: 1000,
+      TWI: {
+        alias: "123456"
       },
       autoSettle: true
     }
@@ -75,6 +95,14 @@ describe Datatrans::JSON::Transaction::MerchantAuthorize do
 
       expected_request_body_without_auto_settle = @expected_request_body.merge(autoSettle: false)
       expect(request.request_body).to eq(expected_request_body_without_auto_settle)
+    end
+  end
+
+  context "with TWI specified" do
+    it "handles TWI correctly in request_body" do
+      request = Datatrans::JSON::Transaction::MerchantAuthorize.new(@datatrans, @valid_params_twint)
+
+      expect(request.request_body).to eq(@expected_request_body_twint)
     end
   end
 
