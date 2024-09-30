@@ -41,7 +41,7 @@ class Datatrans::JSON::Transaction
       }
 
       body["option"] = params[:option] if params[:option].present?
-      body.merge!(params[:additional_options]) if params[:additional_options].present?
+      body.deep_merge!(params[:additional_options]) if params[:additional_options].present?
 
       body
     end

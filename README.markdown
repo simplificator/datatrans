@@ -101,7 +101,6 @@ JSON Transactions
 =================
 
 More information about Datatrans JSON API can be found [here](https://api-reference.datatrans.ch/). Our gem uses endpoints from `/v1/transactions` section. 
-You can set any additional properties like custom webhook URLs in the json payload by passing `additional_options: <your options>`.
 
 We implemented support for [Redirect mode](https://docs.datatrans.ch/docs/redirect-lightbox) (since Lightbox mode may not work correctly on mobile, whereas Redirect works well on all devices).
 
@@ -142,6 +141,10 @@ if init
   transaction_id = transaction.response.params["transactionId"]
 end
 ```
+
+You can set any additional properties like custom webhook URLs in the json payload by passing `additional_options: <your options>`.
+See the API documentation for all available options [here](https://api-reference.datatrans.ch/). 
+
 
 Start a transaction
 -------------------
