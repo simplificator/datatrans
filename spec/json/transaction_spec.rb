@@ -1,7 +1,7 @@
 require "spec_helper"
 
 describe Datatrans::JSON::Transaction do
-  it "returns correct trasaction_path" do
+  it "returns correct transaction_path" do
     params = {transaction_id: "230223022302230223"}
     transaction = Datatrans::JSON::Transaction.new(@datatrans, params)
 
