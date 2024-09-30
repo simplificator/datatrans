@@ -83,13 +83,13 @@ describe Datatrans::JSON::Transaction::Init do
 
   context "with additional_options specified" do
     it "uses option in request_body" do
-      params_with_option = @valid_params.merge(additional_options:         { webhook: {
-        url: 'https://datatrans-test-webhook.ch/webhook'
+      params_with_option = @valid_params.merge(additional_options:         {webhook: {
+        url: "https://datatrans-test-webhook.ch/webhook"
       }})
       request = Datatrans::JSON::Transaction::Init.new(@datatrans, params_with_option)
 
       expected_request_body_with_options = @expected_request_body.merge(webhook: {url:
-                                                                                   'https://datatrans-test-webhook.ch/webhook'})
+                                                                                   "https://datatrans-test-webhook.ch/webhook"})
       expect(request.request_body).to eq(expected_request_body_with_options)
     end
   end
