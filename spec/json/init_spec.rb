@@ -81,6 +81,36 @@ describe Datatrans::JSON::Transaction::Init do
     end
   end
 
+  context "with additional_options specified" do
+    it "uses additional_options in request_body" do
+      params_with_option = @valid_params.merge(additional_options:         {webhook: {
+        url: "https://datatrans-test-webhook.ch/webhook"
+      }})
+      request = Datatrans::JSON::Transaction::Init.new(@datatrans, params_with_option)
+
+      expected_request_body_with_options = @expected_request_body.merge(webhook: {url:
+                                                                                   "https://datatrans-test-webhook.ch/webhook"})
+      expect(request.request_body).to eq(expected_request_body_with_options)
+    end
+  end
+
+  context "with additional_options with redirect specified" do
+    it "uses additional_options in request_body" do
+      params_with_option = @valid_params.merge(additional_options:         {redirect: {
+        method: "POST"
+      }})
+      request = Datatrans::JSON::Transaction::Init.new(@datatrans, params_with_option)
+
+      expected_request_body_with_options = @expected_request_body.merge(redirect: {
+        successUrl: "https://pay.sandbox.datatrans.com/upp/merchant/successPage.jsp",
+        cancelUrl: "https://pay.sandbox.datatrans.com/upp/merchant/cancelPage.jsp",
+        errorUrl: "https://pay.sandbox.datatrans.com/upp/merchant/errorPage.jsp",
+        method: "POST"
+      })
+      expect(request.request_body).to eq(expected_request_body_with_options)
+    end
+  end
+
   context "failed response" do
     before do
       allow_any_instance_of(Datatrans::JSON::Transaction::Init).to receive(:process).and_return(@failed_response)

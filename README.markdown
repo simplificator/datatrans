@@ -142,6 +142,10 @@ if init
 end
 ```
 
+You can set any additional properties like custom webhook URLs in the json payload by passing `additional_options: <your options>`.
+See the API documentation for all available options [here](https://api-reference.datatrans.ch/). 
+
+
 Start a transaction
 -------------------
 
